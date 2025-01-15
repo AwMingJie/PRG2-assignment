@@ -173,7 +173,76 @@ void assign_boarding_gate()
     }
 
 }
-loadfiles_airlines_and_boarding_gates();
+// Question 6 (mingjie)
+void create_new_flight()
+{
+    string choice = null;
+    while (choice != "N")
+    {
+        Console.Write("Enter Flight Number: ");
+        string flightno = Console.ReadLine();
+        Console.Write("Enter Origin: ");
+        string origin = Console.ReadLine();
+        Console.Write("Enter Destination: ");
+        string destination = Console.ReadLine();
+        Console.Write("Enter expected Departure/Arrival time: ");
+        DateTime time = Convert.ToDateTime(Console.ReadLine());
+        Console.Write("Do you want to enter any additional information? (Y/N): ");
+        string option = Console.ReadLine();
+        string special_req = null;
+        List<Flight> f_list = new List<Flight>();
+        if (option == "Y")
+        {
+            Console.Write("What is the special request code: ");
+            special_req = Console.ReadLine();
+            if (special_req == "DDJB")
+            {
+                DDJBFlight D_new = new DDJBFlight(flightno, origin, destination, time, "On time", 300);
+                Flights.Add(flightno, D_new);
+                f_list.Add(D_new);
+            }
+            else if (special_req == "LWTT")
+            {
+                LWTTFlight L_new = new LWTTFlight(flightno, origin, destination, time, "On time", 500);
+                Flights.Add(flightno, L_new);
+                f_list.Add(L_new);
+            }
+            else if (special_req == "CFFT")
+            {
+                CFFTFlight C_new = new CFFTFlight(flightno, origin, destination, time, "On time", 150);
+                Flights.Add(flightno, C_new);
+                f_list.Add(C_new);
+            }
+        }
+        else 
+        {
+            NORMFlight N_new = new NORMFlight(flightno, origin, destination, time, "On time");
+            Flights.Add(flightno, N_new);
+            f_list.Add (N_new);
+        }
+        
+        using(StreamWriter sw = new StreamWriter("flights.csv",true))
+        {
+            foreach(var s in f_list)
+            {
+                sw.WriteLine(s.ToString());
+            }
+            sw.Close();
+        }
+        Console.WriteLine("The flight(s) have been successfully added!");
+
+        Console.Write("Do you want to add another Flight? (Y/N) : ");
+        choice = Console.ReadLine().ToUpper();
+    }
+    
+
+
+
+    
+}
+
+
+loadfiles_airlines();
 loadfiles_flight();
 assign_boarding_gate();
 
@@ -258,3 +327,5 @@ void display_flight_from_airline()
 }
 
 display_flight_from_airline();
+/*assign_boarding_gate();*/
+create_new_flight();
