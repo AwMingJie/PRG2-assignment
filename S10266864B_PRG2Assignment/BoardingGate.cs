@@ -57,7 +57,27 @@ namespace S10266864B_PRG2Assignment
 		}
 		public string ToString()
 		{
-			return "BoardingGate.cs testing";
-		}
+			string s = "Boarding Gate: " + gateName;
+			if (supportsCFFT)
+			{
+				s += "Connecting flight fast transfer requested.";
+			}
+			if (supportsDDJB)
+			{
+				s += "Special Request: Double-decker jet bridge requested.";
+			}
+			if (supportsLWTT)
+			{
+				s += "Longer waiting time requested.";
+			}
+
+			if (Flight != null)
+			{
+				s += Flight.ToString();
+			}
+			return s;
+
+
+        }
 	}
 }

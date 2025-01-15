@@ -6,7 +6,7 @@ Dictionary<string, Flight> Flights = new Dictionary<string, Flight>();
 Dictionary<string, BoardingGate> BoardingGates = new Dictionary<string, BoardingGate>();
 void loadfiles_flight()
 {
-    using (StreamReader sr = new StreamReader("fligts.csv"))
+    using (StreamReader sr = new StreamReader("flights.csv"))
     {
         string? s = sr.ReadLine();
         while ((s = sr.ReadLine()) != null)
@@ -24,11 +24,9 @@ void loadfiles_flight()
             {
                 LWTTFlight l1 = new LWTTFlight(Convert.ToString(data[0]), Convert.ToString(data[1]), Convert.ToString(data[2]), Convert.ToDateTime(data[3]), "On Time", 500);
             }
-
         }
     }
 }
-
 void loadfiles_airlines()
 {
     using (StreamReader sr = new StreamReader("airlines.csv"))
@@ -53,3 +51,13 @@ void loadfiles_airlines()
         }
     }
 }
+
+// question 4 (May)
+void display_boarding_gates()
+{
+    foreach (var kvp in BoardingGates)
+    {
+        kvp.Value.ToString();
+    }
+}
+
