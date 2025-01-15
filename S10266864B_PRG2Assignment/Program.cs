@@ -117,46 +117,57 @@ void display_boarding_gates()
         Console.WriteLine($"{kvp.Value.GateName,-18} {special_request,-25} {flight,-13}");
     }
 }
-display_flights();
-display_boarding_gates();
-        Console.WriteLine(kvp.Value.ToString()); 
-    }
-}
-
 
 //question 5 (mingjie)
-void assignBoardingGate()
+void assign_boarding_gate()
 {
     Console.Write("Enter Flight Number: ");
     string flightno = Console.ReadLine();
-    string check_boardinggate = null;
     bool flag = false;
+    Flight flight = null;
     foreach (var f in Flights)
     {
         if (f.Key == flightno)
         {
             Console.WriteLine(f.Value.ToString());
-            check_boardinggate = f.Value.FlightNumber;
             flag = true;
+            flight = f.Value;
             break;
         }   
     }
     if (flag == true)
     {
-        Console.Write("Enter Boarding Gate: ");
-        string boardingGate = Console.ReadLine();
-        foreach (var b in BoardingGates)
+        bool condition = true;
+        while (condition == true)
         {
-            Console.WriteLine(b.Value.ToString());
-            /*if (b.Value.Flight == null)
+            Console.Write("Enter Boarding Gate: ");
+            string boardingGate = Console.ReadLine();
+           /* BoardingGate B34 = new BoardingGate("B34", true, true, true, flight);
+            BoardingGates.Add("B34", B34);*/
+            foreach (var b in BoardingGates)
             {
-                if (flight)
-                b.Value.Flight = 
-            }*/
+                if (b.Key == boardingGate)
+                {
+                    if (b.Value.Flight == null)
+                    {
+
+                        b.Value.Flight = flight;
+                        Console.WriteLine(b.Value.ToString());
+                        condition = false;
+                    }
+                    else
+                    {
+                        Console.WriteLine("The Boarding Gate is already assigned.");
+                    }
+                    break;
+                }
+                
+            }
+
         }
     }
 
 }
 loadfiles_airlines();
 loadfiles_flight();
-assignBoardingGate();
+assign_boarding_gate();

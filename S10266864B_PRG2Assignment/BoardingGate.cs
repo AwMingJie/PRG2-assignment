@@ -57,7 +57,18 @@ namespace S10266864B_PRG2Assignment
 		}
 		public string ToString()
         {
-			return "BoardingGame";
+			string s;
+			if (flight == null)
+			{
+				s = $"Gate Name: {gateName,-10}";
+            }
+			
+			else
+			{
+                s = $"Gate Name: {gateName,-10} Flight: {flight,-10}";
+            }
+			return s;
+			 
         }
     }
 }
