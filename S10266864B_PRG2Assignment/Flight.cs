@@ -53,7 +53,7 @@ namespace S10266864B_PRG2Assignment
 		}
 		public string ToString()
 		{
-			return $"flight.cs testing";
+			return $"FlightNumber: {flightNumber,-15} Origin: {origin,-20} Destination: {destination,-15} ExpectedTime: {expectedTime,-25} Status: {status,-15}";
 		}
 	}
 }
