@@ -25,7 +25,7 @@ namespace S10266864B_PRG2Assignment
         }
         public string ToString()
         {
-            return base.ToString() + "DDJBFlight.cs testing"; //change ltr
+            return base.ToString() + $"RequestFee: {requestFee,-15}"; //change ltr
         }
     }
 }
