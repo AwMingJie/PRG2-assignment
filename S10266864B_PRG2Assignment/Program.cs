@@ -72,16 +72,54 @@ void display_flights()
     foreach (var f in Flights)
     {
         Console.WriteLine(f.Value.ToString());
-        }
+        
     }
 }
 
 // question 4 (May)
 void display_boarding_gates()
 {
+    loadfiles_airlines();
     foreach (var kvp in BoardingGates)
     {
-        kvp.Value.ToString();
+        Console.WriteLine(kvp.Value.ToString()); 
     }
 }
-display_flights();
+
+
+//question 5 (mingjie)
+void assignBoardingGate()
+{
+    Console.Write("Enter Flight Number: ");
+    string flightno = Console.ReadLine();
+    string check_boardinggate = null;
+    bool flag = false;
+    foreach (var f in Flights)
+    {
+        if (f.Key == flightno)
+        {
+            Console.WriteLine(f.Value.ToString());
+            check_boardinggate = f.Value.FlightNumber;
+            flag = true;
+            break;
+        }   
+    }
+    if (flag == true)
+    {
+        Console.Write("Enter Boarding Gate: ");
+        string boardingGate = Console.ReadLine();
+        foreach (var b in BoardingGates)
+        {
+            Console.WriteLine(b.Value.ToString());
+            /*if (b.Value.Flight == null)
+            {
+                if (flight)
+                b.Value.Flight = 
+            }*/
+        }
+    }
+
+}
+loadfiles_airlines();
+loadfiles_flight();
+assignBoardingGate();
