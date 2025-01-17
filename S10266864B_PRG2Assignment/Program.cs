@@ -69,7 +69,6 @@ void loadfiles_airlines()
 //question 3 (Ming Jie)
 void display_flights()
 {
-    loadfiles_flight();
     foreach (var f in Flights)
     {
         Console.WriteLine(f.Value.ToString());
@@ -80,7 +79,7 @@ void display_flights()
 //question 4 (May)
 void display_boarding_gates()
 {
-    loadfiles_airlines();
+    
     Console.WriteLine("{0, -18} {1,-25 } {2, -13}", "Boarding gates", "Special Request Codes", "Flight Number");
     foreach (var kvp in BoardingGates)
     {
@@ -152,7 +151,7 @@ void assign_boarding_gate()
                     {
 
                         b.Value.Flight = flight;
-                        Console.WriteLine(b.Value.ToString());
+                        Console.WriteLine(flight.ToString() + $"Boarding Gate: {boardingGate}");
                         condition = false;
                     }
                     else
@@ -162,9 +161,36 @@ void assign_boarding_gate()
                     break;
                 }
                 
-            }
-
+            } 
         }
+        while (condition == false)
+        {
+            
+            Console.Write("Would you like to update the status of the Flight? (Y/N): ");
+            string choice = Console.ReadLine();
+            if (choice == "Y")
+            {
+
+                Console.Write("Enter the new status of the flight(Delayed/Boarding/On Time): ");
+                string status = Console.ReadLine();
+                flight.Status = status;
+                Console.WriteLine("Boarding Gate successfully assigned!");
+                
+                condition = true;
+            }
+            else if (choice == "N")
+            {
+                condition = true;
+            }
+            else
+            {
+                Console.WriteLine("Please type only (Y) or (N)");
+            }
+        }
+        
+        
+
+        
     }
 
 }
@@ -185,7 +211,6 @@ void create_new_flight()
         Console.Write("Do you want to enter any additional information? (Y/N): ");
         string option = Console.ReadLine();
         string special_req = null;
-        List<Flight> f_list = new List<Flight>();
         if (option == "Y")
         {
             Console.Write("What is the special request code: ");
@@ -194,34 +219,34 @@ void create_new_flight()
             {
                 DDJBFlight D_new = new DDJBFlight(flightno, origin, destination, time, "On time", 300);
                 Flights.Add(flightno, D_new);
-                f_list.Add(D_new);
+                
             }
             else if (special_req == "LWTT")
             {
                 LWTTFlight L_new = new LWTTFlight(flightno, origin, destination, time, "On time", 500);
                 Flights.Add(flightno, L_new);
-                f_list.Add(L_new);
+                
             }
             else if (special_req == "CFFT")
             {
                 CFFTFlight C_new = new CFFTFlight(flightno, origin, destination, time, "On time", 150);
                 Flights.Add(flightno, C_new);
-                f_list.Add(C_new);
+                
             }
         }
         else 
         {
             NORMFlight N_new = new NORMFlight(flightno, origin, destination, time, "On time");
             Flights.Add(flightno, N_new);
-            f_list.Add (N_new);
+          
         }
         
         using(StreamWriter sw = new StreamWriter("flights.csv",true))
         {
-            foreach(var s in f_list)
-            {
-                sw.WriteLine(s.ToString());
-            }
+            
+            /*string flights = flightno + "," + origin + "," + destination + time.ToString("HH:mm tt") + "," + special_req;
+            Console.WriteLine(flights);*/
+            sw.WriteLine(flightno+","+origin+","+destination+","+time.ToString("HH:mm tt")+","+special_req);
             sw.Close();
         }
         Console.WriteLine("The flight(s) have been successfully added!");
@@ -235,9 +260,41 @@ void create_new_flight()
 
     
 }
+//question 9 (mingjie)
+void Display_Scheduled_Flights()
+{
+    List<Flight> Flights_list = new List<Flight>();
+    foreach (var f in Flights)
+    {
+        Flights_list.Add(f.Value);
+    }
+    Flights_list.Sort();
+    
+    foreach (var f in Flights_list)
+    {
+        bool flag = false;
+        BoardingGate temp = null;
+        foreach (var b in BoardingGates)
+        {
+            if (b.Value.Flight == f) { flag = true; temp = b.Value; break; }
+
+            
+        }
+        
+        if (flag)
+        {
+            Console.WriteLine(f.ToString()+ $"Boarding Gate: {temp.GateName}" );
+        }
+        else
+        {
+            Console.WriteLine(f.ToString());
+        }
+    }
+}
 
 
 loadfiles_airlines();
 loadfiles_flight();
-/*assign_boarding_gate();*/
-create_new_flight();
+//assign_boarding_gate();
+//create_new_flight();
+Display_Scheduled_Flights();
