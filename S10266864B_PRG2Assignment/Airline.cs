@@ -24,16 +24,12 @@ namespace S10266864B_PRG2Assignment
 		}
 		private Dictionary<string,Flight> flights;
 
-		public Dictionary<string,Flight> Flights
-		{
-			get { return flights; }
-			set { flights = value; }
-		}
-		public Airline(string name, string code, Dictionary<string, Flight> flights)
+		public Dictionary<string, Flight> Flights = new Dictionary<string, Flight>();
+		
+		public Airline(string name, string code)
 		{
 			Name = name;
 			Code = code;
-			Flights = flights;
 		}
 		public bool AddFlight(Flight fly)
 		{
@@ -49,7 +45,12 @@ namespace S10266864B_PRG2Assignment
 		}
 		public string ToString()
 		{
-			return "Airline.cs testing";
+			string s = $"Name: {name,-20} Code: {code,-5}";
+			foreach (var flight in Flights)
+			{
+				s += "\n" + flight.ToString();
+			}
+			return s;
 		}
 	}
 }
