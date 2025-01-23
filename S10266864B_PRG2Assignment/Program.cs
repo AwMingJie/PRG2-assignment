@@ -1,4 +1,10 @@
-﻿﻿
+﻿//==========================================================
+// Student Number	: S10266864
+// Student Name	: Aw Ming Jie
+// Partner Name	: May Cherry Aung
+//==========================================================
+
+
 using S10266864B_PRG2Assignment;
 using System.Diagnostics.CodeAnalysis;
 
@@ -306,12 +312,15 @@ assign_boarding_gate();
 
 void display_flight_from_airline()
 {
+    Console.WriteLine("==============================================");
+    Console.WriteLine("List of Airlines for Changi Airport Terminal 5");
+    Console.WriteLine("==============================================");
     Console.WriteLine($"{"Airline Name",-20} {"Airline Code",-5}" + "\n");
     foreach (var a in Airlines)
     {
         Console.WriteLine($"{a.Value.Name,-20} {a.Value.Code}");
     }
-    Console.Write("Enter the 2-letter Airline Code: ");
+    Console.Write("Enter Airline Code: ");
     string? code = Console.ReadLine();
     Airline user_airline = null;
     foreach (var a in Airlines)
@@ -338,13 +347,16 @@ void display_flight_from_airline()
     }
     if (user_airline != null)
     {
-        Console.WriteLine($"{"Airline Number",-20}{"Origin",-20}{"Destination",-20}");
+        Console.WriteLine("==============================================");
+        Console.WriteLine($"List of Flights for {user_airline.Name}");
+        Console.WriteLine("==============================================");
+        Console.WriteLine($"{"Airline Number",-20}{"Origin",-20}{"Destination",-20}{"Expected Departure/Arrival Time",-30}");
         foreach (var f in user_airline.Flights)
         {
-            Console.WriteLine($"{f.Value.FlightNumber,-20}{f.Value.Origin,-20}{f.Value.Destination,-20}");
+            Console.WriteLine($"{f.Value.FlightNumber,-20}{f.Value.Origin,-20}{f.Value.Destination,-20}{f.Value.ExpectedTime, -30}");
         }
 
-        Console.WriteLine("Enter the flight number to select: ");
+        Console.Write("Enter the flight number to select: ");
         string user_flight = Console.ReadLine();
         Console.WriteLine($"{"Flight Number", -15}{"Airline name", -20}{"Origin", -20}{"Destination", -20}{"Expected Departure/Arrival Time", -35}{"Special Request Code", -25}{"Boarding Gate", -20}");
         foreach (var f1 in user_airline.Flights)
@@ -382,9 +394,116 @@ void display_flight_from_airline()
 
 }
 
+//display_flight_from_airline();
+///*assign_boarding_gate();*/
+//create_new_flight();
+
+// question 8 (May)
+
+void modify_flight_details()
+{
+    //List all the airlines with their codes
+    Console.WriteLine($"{"Airline Name",-20} {"Airline Code",-5}" + "\n");
+    foreach (var a in Airlines)
+    {
+        Console.WriteLine($"{a.Value.Name,-20} {a.Value.Code}");
+    }
+
+    //Ask user for airline code and put the user's chosen Airline object in variable user_airline
+    Console.Write("Enter Airline Code: ");
+    string? code = Console.ReadLine();
+    Airline user_airline = null;
+    foreach (var a in Airlines)
+    {
+        if (a.Key == code)
+        {
+            user_airline = a.Value;
+        }
+    }
+
+    //Assign Flight objects in dictionaries of their respective airlines
+    foreach (var f in Flights)
+    {
+        Flight flight = f.Value;
+        string[] flight_num = flight.FlightNumber.Split(" ");
+        string airline_code = flight_num[0];
+        foreach (var a in Airlines)
+        {
+            if (a.Key == airline_code)
+            {
+                a.Value.Flights.Add(flight.FlightNumber, flight);
+                break;
+            }
+        }
+    }
+    //Check if user's input airline exists, if it does, prints out all the flights in the airline's dictionary
+    if (user_airline != null)
+    {
+        Console.WriteLine($"{"Airline Number",-20}{"Origin",-20}{"Destination",-20}");
+        foreach (var f in user_airline.Flights)
+        {
+            Console.WriteLine($"{f.Value.FlightNumber,-20}{f.Value.Origin,-20}{f.Value.Destination,-20}");
+        }
+
+    }
+
+    //Ask user to choose a flight to modify or delete
+
+    Console.Write("[1] choose an existing Flight to modify, or delete: ");
+    string flight_number = Console.ReadLine();
+    Flight flight_to_modify = null;
+    foreach (var f in Flights)
+    {
+        if (f.Key == flight_number)
+        {
+            flight_to_modify = f.Value;
+            Console.WriteLine("1. Modify Flight" + "\n" +
+                "2. Delete Flight");
+            Console.Write("Choose an option: ");
+            string choice = Console.ReadLine();
+            if (choice == "1")
+            {
+                Console.WriteLine(
+                    "1. Modify Basic Information" + "\n" +
+                    "2. Modify Status" + "\n" +
+                    "3. Modify Special Request Code" + "\n" +
+                    "4. Modify Boarding Gate"
+                    );
+                Console.Write("Choose an option: ");
+                string modify_choice = Console.ReadLine();
+                if (modify_choice == "1")
+                {
+                    Console.Write("Enter new Origin");
+                    string new_origin = Console.ReadLine();
+                    Console.WriteLine("Enter new Destination: ");
+                    string new_desti = Console.ReadLine();
+                    Console.WriteLine("Enter new Expected Departure/Arrival Time(dd/mm/yyyy hh:mm): ");
+                    string new_time = Console.ReadLine();
+                    f.Value.Origin = new_origin;
+                    f.Value.Destination = new_desti;
+                    f.Value.ExpectedTime = Convert.ToDateTime(new_time);
+                    Console.WriteLine("Flight updated!");
+                    Console.WriteLine($"Flight Number: {flight_to_modify.FlightNumber}" + "\n" +
+                        $"Airline Name: {user_airline}" + "\n" +
+                        $"Origin: {flight_to_modify.Origin}" + "\n" +
+                        $"Destination: {flight_to_modify.Destination}" + "\n" +
+                        $"Expected Departure/Arrival Time: {flight_to_modify.ExpectedTime}" + "\n" +
+                        $"Status: {flight_to_modify.Status}" + "\n" +
+                        $"Special Request Code: {flight_to_modify.}" + "\n" +);
+
+                }
+
+            }
+        }
+    }
+    
+
+}
+
 display_flight_from_airline();
 /*assign_boarding_gate();*/
 create_new_flight();
 //assign_boarding_gate();
 //create_new_flight();
 Display_Scheduled_Flights();
+modify_flight_details();
