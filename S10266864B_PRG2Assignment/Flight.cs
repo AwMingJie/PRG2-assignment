@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace S10266864B_PRG2Assignment
 {
-    abstract class Flight
+    abstract class Flight:IComparable<Flight>
     {
 		private string flightNumber;
 
@@ -50,6 +50,10 @@ namespace S10266864B_PRG2Assignment
 			Destination = destination;
 			ExpectedTime = expectedTime;
 			Status = status;
+		}
+		public int CompareTo(Flight f)
+		{
+			return ExpectedTime.CompareTo(f.ExpectedTime);
 		}
 		public string ToString()
 		{
