@@ -1,4 +1,10 @@
-﻿﻿
+﻿//==========================================================
+// Student Number	: S10266864
+// Student Name	: Aw Ming Jie
+// Partner Name	: May Cherry Aung
+//==========================================================
+
+
 using S10266864B_PRG2Assignment;
 using System.Diagnostics.CodeAnalysis;
 
