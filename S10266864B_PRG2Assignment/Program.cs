@@ -298,7 +298,7 @@ void Display_Scheduled_Flights()
 }
 
 
-loadfiles_airlines();
+loadfiles_airlines_and_boarding_gates();
 loadfiles_flight();
 assign_boarding_gate();
 

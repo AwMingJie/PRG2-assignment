@@ -19,13 +19,13 @@ namespace S10266864B_PRG2Assignment
         {
             RequestFee = requestFee;
         }
-        public double CalculateFee()
+        public double CalculateFees()
         {
-            return 0.0; //change ltr
+            return base.CalculateFees() + 150.0; 
         }
         public string ToString()
         {
-            return base.ToString() + "CFFTFlight.cs testing"; //change ltr
+            return base.ToString() + $"RequestFee: {requestFee,-15}"; 
         }
     }
 }
