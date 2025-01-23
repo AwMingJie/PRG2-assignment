@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -28,8 +29,8 @@ namespace S10266864B_PRG2Assignment
 			get { return code; }
 			set { code = value; }
 		}
-		private Dictionary<string,Flight> flights;
 
+		private Dictionary<string, Flight> flights;
 		public Dictionary<string, Flight> Flights = new Dictionary<string, Flight>();
 		
 		public Airline(string name, string code)
@@ -39,11 +40,30 @@ namespace S10266864B_PRG2Assignment
 		}
 		public bool AddFlight(Flight fly)
 		{
-			return true; //change later
+			string num = fly.FlightNumber;
+			if (fly != null)
+			{
+				if (Flights.ContainsKey(num))
+				{
+					return false;
+				}
+				else
+				{
+					flights.Add(num, fly);
+					return true;
+				}
+			}
+			return false;
 		}
 		public double CalculateFees()
 		{
-			return 0.0; //change later
+			double total_fee = 0.0;
+			foreach (var kvp in Flights)
+			{
+				Flight flight = kvp.Value;
+                total_fee = flight.CalculateFees() + 300;		
+			}
+			return total_fee;
 		}
 		public bool RemoveFlight(Flight fly)
 		{

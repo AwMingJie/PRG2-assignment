@@ -59,7 +59,8 @@ namespace S10266864B_PRG2Assignment
 		}
 		public double CalculateFees()
 		{
-			return 0.00; //change ltr
+			
+			return 300.00;//change ltr
 		}
 		public string ToString()
         {
