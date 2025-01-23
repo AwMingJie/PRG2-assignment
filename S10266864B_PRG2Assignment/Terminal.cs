@@ -1,12 +1,13 @@
 ﻿//==========================================================
-// Student Number	: S10266864
-// Student Name	: Aw Ming Jie
-// Partner Name	: May Cherry Aung
+// Student Number	: S10269732
+// Student Name	: May Cherry Aung
+// Partner Name	: Aw Ming Jie
 //==========================================================
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Intrinsics.X86;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,7 +16,6 @@ namespace S10266864B_PRG2Assignment
     class Terminal
     {
         private string terminalName;
-
         public string TerminalName
         {
             get { return terminalName; }
@@ -23,59 +23,79 @@ namespace S10266864B_PRG2Assignment
         }
         private Dictionary<string, Airline> airlines;
 
-        public Dictionary<string, Airline> Airlines
-        {
-            get { return airlines; }
-            set { airlines = value; }
-        }
+        public Dictionary<string, Airline> Airlines = new Dictionary<string, Airline>();
+        
         private Dictionary<string, Flight> flights;
 
-        public Dictionary<string, Flight> Flights
-        {
-            get { return flights; }
-            set { flights = value; }
-        }
+        public Dictionary<string, Flight> Flights = new Dictionary<string, Flight>();
+
         private Dictionary<string, BoardingGate> boardingGates;
 
-        public Dictionary<string, BoardingGate> BoardingGates
-        {
-            get { return boardingGates; }
-            set { boardingGates = value; }
-        }
+        public Dictionary<string, BoardingGate> BoardingGates = new Dictionary<string, BoardingGate>();
+
         private Dictionary<string, double> gateFees;
 
-        public Dictionary<string, double> GateFees
-        {
-            get { return gateFees; }
-            set { gateFees = value; }
-        }
-        public Terminal(string terminalName, Dictionary<string, Airline> airlines, Dictionary<string, Flight> flights, Dictionary<string, BoardingGate> boardingGates, Dictionary<string, double> gateFees)
+        public Dictionary<string, double> GateFees = new Dictionary<string, double>();
+
+        public Terminal() { } 
+        public Terminal(string terminalName)
         {
             TerminalName = terminalName;
-            Airlines = airlines;
-            Flights = flights;
-            BoardingGates = boardingGates;
-            GateFees = gateFees;
         }
         public bool AddAirline(Airline airline)
         {
-            return true; //change ltr
+            if (airline != null)
+            {
+                string name = airline.Name;
+                if (Airlines.ContainsKey(name))
+                {
+                    return false;
+                }
+                else
+                {
+                    Airlines.Add(name, airline);
+                    return true;
+                }
+            }
+            return true;
         }
         public bool AddBoardingGate(BoardingGate boardingGate)
         {
-            return true; //change ltr
+            if (boardingGate != null)
+            {
+                string name = boardingGate.GateName;
+                if (BoardingGates.ContainsKey(name))
+                {
+                    return false;
+                }
+                else
+                {
+                    BoardingGates.Add(name, boardingGate);
+                    return true;
+                }
+            }
+            return true;
         }
-        public bool GetAirlineFromFlight(Airline airline)
+        public Airline GetAirlineFromFlight(Flight flight)
         {
-            return true; //change ltr
+            string flightNum = flight.FlightNumber;
+            string[] array = flightNum.Split(' ');
+            string airlineCode = array[0];
+            Airline airline = Airlines[airlineCode];
+            return airline;          
         }
         public void PrintAirlineFees()
         {
-            Console.WriteLine("Print AirlineFees");
+            Console.WriteLine($"{"Airline Name",-25} {"Fees",-5}");
+            foreach (Airline airline in Airlines.Values)
+            {
+                Console.WriteLine($"{airline.Name,-25} {airline.CalculateFees,-5}");
+            }
         }
         public string ToString()
         {
-            return "Terminal.cs testing"; //change ltr
+            string s = $"=============================================\r\nWelcome to {TerminalName}\r\n=============================================\r\n";
+            return s;
         }
 
 

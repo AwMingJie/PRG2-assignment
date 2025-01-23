@@ -16,22 +16,17 @@ namespace S10266864B_PRG2Assignment
     {
         private double requestFee;
 
-        public double RequestFee
+        public const double RequestFee = 150;
+        public CFFTFlight(string flightNumber, string origin, string destination, DateTime expectedTime, string status) : base(flightNumber, origin, destination, expectedTime, status)
         {
-            get { return requestFee; }
-            set { requestFee = value; }
-        }
-        public CFFTFlight(string flightNumber, string origin, string destination, DateTime expectedTime, string status, double requestFee) : base(flightNumber, origin, destination, expectedTime, status)
-        {
-            RequestFee = requestFee;
         }
         public double CalculateFee()
         {
-            return 0.0; //change ltr
+            return base.CalculateFees() + RequestFee;
         }
         public string ToString()
         {
-            return base.ToString() + "CFFTFlight.cs testing"; //change ltr
+            return base.ToString() + $"Special Request: CFFT     RequestFee: {requestFee,-15}";
         }
     }
 }

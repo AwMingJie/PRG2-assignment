@@ -1,7 +1,7 @@
 ﻿//==========================================================
-// Student Number	: S10266864
-// Student Name	: Aw Ming Jie
-// Partner Name	: May Cherry Aung
+// Student Number	: S10269732
+// Student Name	: May Cherry Aung
+// Partner Name	: Aw Ming Jie
 //==========================================================
 
 using System;
@@ -16,22 +16,18 @@ namespace S10266864B_PRG2Assignment
     {
         private double requestFee;
 
-        public double RequestFee
+        public const double RequestFee = 300;
+      
+        public DDJBFlight(string flightNumber, string origin, string destination, DateTime expectedTime, string status) : base(flightNumber, origin, destination, expectedTime, status)
         {
-            get { return requestFee; }
-            set { requestFee = value; }
-        }
-        public DDJBFlight(string flightNumber, string origin, string destination, DateTime expectedTime, string status, double requestFee) : base(flightNumber, origin, destination, expectedTime, status)
-        {
-            RequestFee = requestFee;
         }
         public double CalculateFee()
         {
-            return 0.0; //change ltr
+            return base.CalculateFees() + RequestFee;
         }
         public string ToString()
         {
-            return base.ToString() + $"RequestFee: {requestFee,-15}"; //change ltr
+            return base.ToString() + $"Special Request: DDJB     RequestFee: {requestFee,-15}";
         }
     }
 }

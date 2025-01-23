@@ -12,7 +12,7 @@ Dictionary<string, Airline> Airlines = new Dictionary<string, Airline>();
 Dictionary<string, Flight> Flights = new Dictionary<string, Flight>();
 Dictionary<string, BoardingGate> BoardingGates = new Dictionary<string, BoardingGate>();
 
-
+Terminal terminal = new Terminal("Changi Airport Terminal 5");
 //question 1 (May)
 void loadfiles_airlines_and_boarding_gates()
 {
@@ -24,6 +24,7 @@ void loadfiles_airlines_and_boarding_gates()
             string[] data = s.Split(",");
             Airline airline = new Airline(data[0], data[1]);
             Airlines.Add(data[1], airline);
+            Terminal.AddAirline(airline);
         }
     }
     using (StreamReader sr = new StreamReader("boardinggates.csv"))

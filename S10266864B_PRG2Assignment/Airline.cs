@@ -41,7 +41,7 @@ namespace S10266864B_PRG2Assignment
 		{
 			return true; //change later
 		}
-		public double CalculateFee()
+		public double CalculateFees()
 		{
 			return 0.0; //change later
 		}
