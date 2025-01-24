@@ -38,10 +38,10 @@ namespace S10266864B_PRG2Assignment
 			Name = name;
 			Code = code;
 		}
-		public bool AddFlight(Flight fly)
+		public bool AddFlight(Flight flight)
 		{
-			string num = fly.FlightNumber;
-			if (fly != null)
+			string num = flight.FlightNumber;
+			if (flight != null)
 			{
 				if (Flights.ContainsKey(num))
 				{
@@ -49,7 +49,7 @@ namespace S10266864B_PRG2Assignment
 				}
 				else
 				{
-					flights.Add(num, fly);
+					flights.Add(num, flight);
 					return true;
 				}
 			}
@@ -65,7 +65,7 @@ namespace S10266864B_PRG2Assignment
 			}
 			return total_fee;
 		}
-		public bool RemoveFlight(Flight fly)
+		public bool RemoveFlight(Flight flight)
 		{
 			return true; //change later
 		}

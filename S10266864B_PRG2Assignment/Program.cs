@@ -8,9 +8,9 @@
 using S10266864B_PRG2Assignment;
 using System.Diagnostics.CodeAnalysis;
 
-Dictionary<string, Airline> Airlines = new Dictionary<string, Airline>();
-Dictionary<string, Flight> Flights = new Dictionary<string, Flight>();
-Dictionary<string, BoardingGate> BoardingGates = new Dictionary<string, BoardingGate>();
+//Dictionary<string, Airline> Airlines = new Dictionary<string, Airline>();
+//Dictionary<string, Flight> Flights = new Dictionary<string, Flight>();
+//Dictionary<string, BoardingGate> BoardingGates = new Dictionary<string, BoardingGate>();
 
 Terminal terminal = new Terminal("Changi Airport Terminal 5");
 //question 1 (May)
@@ -23,7 +23,6 @@ void loadfiles_airlines_and_boarding_gates()
         {
             string[] data = s.Split(",");
             Airline airline = new Airline(data[0], data[1]);
-            Airlines.Add(data[1], airline);
             terminal.AddAirline(airline);
         }
     }
@@ -35,7 +34,6 @@ void loadfiles_airlines_and_boarding_gates()
             string[] data = s.Split(",");
             Flight? flight = null;
             BoardingGate boardingGate = new BoardingGate(data[0], Convert.ToBoolean(data[1]), Convert.ToBoolean(data[2]), Convert.ToBoolean(data[3]), flight);
-            BoardingGates.Add(data[0], boardingGate);
             terminal.AddBoardingGate(boardingGate);
         }
     }
@@ -53,23 +51,23 @@ void loadfiles_flight()
         string[] data = s.Split(',');
         if (data[4] == "DDJB")
         {
-            DDJBFlight d1 = new DDJBFlight(Convert.ToString(data[0]), Convert.ToString(data[1]), Convert.ToString(data[2]), Convert.ToDateTime(data[3]), "On Time", 300);
-            Flights.Add(data[0], d1);
+            DDJBFlight d1 = new DDJBFlight(Convert.ToString(data[0]), Convert.ToString(data[1]), Convert.ToString(data[2]), Convert.ToDateTime(data[3]), "On Time");
+            terminal.Flights.Add(data[0], d1);
         }
         else if (data[4] == "CFFT")
         {
-            CFFTFlight c1 = new CFFTFlight(Convert.ToString(data[0]), Convert.ToString(data[1]), Convert.ToString(data[2]), Convert.ToDateTime(data[3]), "On Time", 150);
-            Flights.Add(data[0], c1);
+            CFFTFlight c1 = new CFFTFlight(Convert.ToString(data[0]), Convert.ToString(data[1]), Convert.ToString(data[2]), Convert.ToDateTime(data[3]), "On Time");
+            terminal.Flights.Add(data[0], c1);
         }
         else if (data[4] == "LWTT")
         {
-            LWTTFlight l1 = new LWTTFlight(Convert.ToString(data[0]), Convert.ToString(data[1]), Convert.ToString(data[2]), Convert.ToDateTime(data[3]), "On Time", 500);
-            Flights.Add(data[0], l1);
+            LWTTFlight l1 = new LWTTFlight(Convert.ToString(data[0]), Convert.ToString(data[1]), Convert.ToString(data[2]), Convert.ToDateTime(data[3]), "On Time");
+            terminal.Flights.Add(data[0], l1);
         }
         else
         {
             NORMFlight n1 = new NORMFlight(Convert.ToString(data[0]), Convert.ToString(data[1]), Convert.ToString(data[2]), Convert.ToDateTime(data[3]), "On Time");
-            Flights.Add(data[0], n1);
+            terminal.Flights.Add(data[0], n1);
         }
 
     }
@@ -80,7 +78,7 @@ void loadfiles_flight()
 //question 3 (Ming Jie)
 void display_flights()
 {
-    foreach (var f in Flights)
+    foreach (var f in terminal.Flights)
     {
         Console.WriteLine(f.Value.ToString());
         
@@ -92,7 +90,7 @@ void display_boarding_gates()
 {
     
     Console.WriteLine("{0, -18} {1,-25 } {2, -13}", "Boarding gates", "Special Request Codes", "Flight Number");
-    foreach (var kvp in BoardingGates)
+    foreach (var kvp in terminal.BoardingGates)
     {
         List<string> special_request_list = new List<string>();
         string special_request = "";
@@ -135,7 +133,7 @@ void assign_boarding_gate()
     string flightno = Console.ReadLine();
     bool flag = false;
     Flight flight = null;
-    foreach (var f in Flights)
+    foreach (var f in terminal.Flights)
     {
         if (f.Key == flightno)
         {
@@ -154,7 +152,7 @@ void assign_boarding_gate()
             string boardingGate = Console.ReadLine();
            /* BoardingGate B34 = new BoardingGate("B34", true, true, true, flight);
             BoardingGates.Add("B34", B34);*/
-            foreach (var b in BoardingGates)
+            foreach (var b in terminal.BoardingGates)
             {
                 if (b.Key == boardingGate)
                 {
@@ -228,27 +226,27 @@ void create_new_flight()
             special_req = Console.ReadLine();
             if (special_req == "DDJB")
             {
-                DDJBFlight D_new = new DDJBFlight(flightno, origin, destination, time, "On time", 300);
-                Flights.Add(flightno, D_new);
+                DDJBFlight D_new = new DDJBFlight(flightno, origin, destination, time, "On time");
+                terminal.Flights.Add(flightno, D_new);
                 
             }
             else if (special_req == "LWTT")
             {
-                LWTTFlight L_new = new LWTTFlight(flightno, origin, destination, time, "On time", 500);
-                Flights.Add(flightno, L_new);
+                LWTTFlight L_new = new LWTTFlight(flightno, origin, destination, time, "On time");
+                terminal.Flights.Add(flightno, L_new);
                 
             }
             else if (special_req == "CFFT")
             {
-                CFFTFlight C_new = new CFFTFlight(flightno, origin, destination, time, "On time", 150);
-                Flights.Add(flightno, C_new);
+                CFFTFlight C_new = new CFFTFlight(flightno, origin, destination, time, "On time");
+                terminal.Flights.Add(flightno, C_new);
                 
             }
         }
         else 
         {
             NORMFlight N_new = new NORMFlight(flightno, origin, destination, time, "On time");
-            Flights.Add(flightno, N_new);
+            terminal.Flights.Add(flightno, N_new);
           
         }
         
@@ -275,7 +273,7 @@ void create_new_flight()
 void Display_Scheduled_Flights()
 {
     List<Flight> Flights_list = new List<Flight>();
-    foreach (var f in Flights)
+    foreach (var f in terminal.Flights)
     {
         Flights_list.Add(f.Value);
     }
@@ -285,7 +283,7 @@ void Display_Scheduled_Flights()
     {
         bool flag = false;
         BoardingGate temp = null;
-        foreach (var b in BoardingGates)
+        foreach (var b in terminal.BoardingGates)
         {
             if (b.Value.Flight == f) { flag = true; temp = b.Value; break; }
 
@@ -316,14 +314,14 @@ void display_flight_from_airline()
     Console.WriteLine("List of Airlines for Changi Airport Terminal 5");
     Console.WriteLine("==============================================");
     Console.WriteLine($"{"Airline Name",-20} {"Airline Code",-5}" + "\n");
-    foreach (var a in Airlines)
+    foreach (var a in terminal.Airlines)
     {
         Console.WriteLine($"{a.Value.Name,-20} {a.Value.Code}");
     }
     Console.Write("Enter Airline Code: ");
     string? code = Console.ReadLine();
     Airline user_airline = null;
-    foreach (var a in Airlines)
+    foreach (var a in terminal.Airlines)
     {
         if (a.Key == code)
         {
@@ -331,12 +329,12 @@ void display_flight_from_airline()
         }
     }
 
-    foreach(var f in Flights)
+    foreach(var f in terminal.Flights)
     {
         Flight flight = f.Value;
         string[] flight_num = flight.FlightNumber.Split(" ");
         string airline_code = flight_num[0];
-        foreach (var a in Airlines)
+        foreach (var a in terminal.Airlines)
         {
             if (a.Key == airline_code)
             {
@@ -365,7 +363,7 @@ void display_flight_from_airline()
             {
                 Flight f = f1.Value;
                 string boarding_gate = "";
-                foreach (var b in BoardingGates)
+                foreach (var b in terminal.BoardingGates)
                 {
                     if (b.Value.Flight == f)
                     {
@@ -404,7 +402,7 @@ void modify_flight_details()
 {
     //List all the airlines with their codes
     Console.WriteLine($"{"Airline Name",-20} {"Airline Code",-5}" + "\n");
-    foreach (var a in Airlines)
+    foreach (var a in terminal.Airlines)
     {
         Console.WriteLine($"{a.Value.Name,-20} {a.Value.Code}");
     }
@@ -413,7 +411,7 @@ void modify_flight_details()
     Console.Write("Enter Airline Code: ");
     string? code = Console.ReadLine();
     Airline user_airline = null;
-    foreach (var a in Airlines)
+    foreach (var a in terminal.Airlines)
     {
         if (a.Key == code)
         {
@@ -422,12 +420,12 @@ void modify_flight_details()
     }
 
     //Assign Flight objects in dictionaries of their respective airlines
-    foreach (var f in Flights)
+    foreach (var f in terminal.Flights)
     {
         Flight flight = f.Value;
         string[] flight_num = flight.FlightNumber.Split(" ");
         string airline_code = flight_num[0];
-        foreach (var a in Airlines)
+        foreach (var a in terminal.Airlines)
         {
             if (a.Key == airline_code)
             {
@@ -452,7 +450,7 @@ void modify_flight_details()
     Console.Write("[1] choose an existing Flight to modify, or delete: ");
     string flight_number = Console.ReadLine();
     Flight flight_to_modify = null;
-    foreach (var f in Flights)
+    foreach (var f in terminal.Flights)
     {
         if (f.Key == flight_number)
         {
