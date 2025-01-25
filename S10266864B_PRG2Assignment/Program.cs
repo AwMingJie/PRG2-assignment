@@ -487,7 +487,7 @@ void modify_flight_details()
                         $"Destination: {flight_to_modify.Destination}" + "\n" +
                         $"Expected Departure/Arrival Time: {flight_to_modify.ExpectedTime}" + "\n" +
                         $"Status: {flight_to_modify.Status}" + "\n" +
-                        $"Special Request Code: {flight_to_modify.}" + "\n" +);
+                        $"Special Request Code: {flight_to_modify}" + "\n" );
 
                 }
 
