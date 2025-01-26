@@ -67,7 +67,16 @@ namespace S10266864B_PRG2Assignment
 		}
 		public bool RemoveFlight(Flight flight)
 		{
-			return true; //change later
+			string temp = flight.FlightNumber;
+			foreach (var kvp in Flights)
+			{
+				if (kvp.Key == temp)
+				{
+					Flights.Remove(kvp.Key);
+					return true;
+				}
+			}
+			return false; 
 		}
 		public string ToString()
 		{
