@@ -529,8 +529,6 @@ void modify_flight_details() { }
     }
     
 
-}
-
 display_flight_from_airline();
 /*assign_boarding_gate();*/
 create_new_flight();
