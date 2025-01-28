@@ -47,17 +47,17 @@ void create_flights(string num, string origin, string desti, DateTime time,strin
 {
     if (special_code == "DDJB")
     {
-        DDJBFlight d1 = new DDJBFlight(num, origin, desti, time, status);
+        DDJBFlight d1 = new DDJBFlight(num, origin, desti, time, status, 300.0);
         terminal.Flights.Add(num, d1);
     }
     else if (special_code == "CFFT")
     {
-        CFFTFlight c1 = new CFFTFlight(num, origin, desti, time, status);
+        CFFTFlight c1 = new CFFTFlight(num, origin, desti, time, status, 150.0);
         terminal.Flights.Add(num, c1);
     }
     else if (special_code == "LWTT")
     {
-        LWTTFlight l1 = new LWTTFlight(num, origin, desti, time, status);
+        LWTTFlight l1 = new LWTTFlight(num, origin, desti, time, status, 500.0);
         terminal.Flights.Add(num, l1);
     }
     else
@@ -233,19 +233,19 @@ void create_new_flight()
             special_req = Console.ReadLine();
             if (special_req == "DDJB")
             {
-                DDJBFlight D_new = new DDJBFlight(flightno, origin, destination, time, "On time");
+                DDJBFlight D_new = new DDJBFlight(flightno, origin, destination, time, "On time", 300.0);
                 terminal.Flights.Add(flightno, D_new);
                 
             }
             else if (special_req == "LWTT")
             {
-                LWTTFlight L_new = new LWTTFlight(flightno, origin, destination, time, "On time");
+                LWTTFlight L_new = new LWTTFlight(flightno, origin, destination, time, "On time", 500.0);
                 terminal.Flights.Add(flightno, L_new);
                 
             }
             else if (special_req == "CFFT")
             {
-                CFFTFlight C_new = new CFFTFlight(flightno, origin, destination, time, "On time");
+                CFFTFlight C_new = new CFFTFlight(flightno, origin, destination, time, "On time", 150.0);
                 terminal.Flights.Add(flightno, C_new);
                 
             }

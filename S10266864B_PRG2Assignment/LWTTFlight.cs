@@ -14,11 +14,10 @@ namespace S10266864B_PRG2Assignment
 {
     class LWTTFlight : Flight
     {
-        private double requestFee;
-
-        public const double RequestFee = 500;
-        public LWTTFlight(string flightNumber, string origin, string destination, DateTime expectedTime, string status) : base(flightNumber, origin, destination, expectedTime, status)
+        public double RequestFee { get; set; }
+        public LWTTFlight(string flightNumber, string origin, string destination, DateTime expectedTime, string status, double requestFee) : base(flightNumber, origin, destination, expectedTime, status)
         {
+            RequestFee = requestFee;
         }
         public double CalculateFee()
         {
@@ -26,7 +25,7 @@ namespace S10266864B_PRG2Assignment
         }
         public string ToString()
         {
-            return base.ToString() + $"Special Request: LWTT     RequestFee: {requestFee,-15}";
+            return base.ToString() + $"Special Request: LWTT     RequestFee: {RequestFee,-15}";
         }
     }
 }
