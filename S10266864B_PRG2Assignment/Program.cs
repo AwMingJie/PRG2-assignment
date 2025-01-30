@@ -308,11 +308,6 @@ void Display_Scheduled_Flights()
     }
 }
 
-
-loadfiles_airlines_and_boarding_gates();
-loadfiles_flight();
-assign_boarding_gate();
-
 //question 7 (May)
 
 //A separate function to list all the airlines
@@ -548,10 +543,49 @@ void modify_flight_details()
         }
     }
 }
-display_flight_from_airline();
-    /*assign_boarding_gate();*/
-create_new_flight();
-    //assign_boarding_gate();
-    //create_new_flight();
-Display_Scheduled_Flights();
-modify_flight_details();
+//display_flight_from_airline();
+//    /*assign_boarding_gate();*/
+//create_new_flight();
+//    //assign_boarding_gate();
+//    //create_new_flight();
+//Display_Scheduled_Flights();
+//modify_flight_details();
+
+Console.WriteLine($"Loading Airlines...\r\n{terminal.Airlines.Count} Airlines Loaded!\r\nLoading Boarding Gates...\r\n{terminal.BoardingGates.Count} Boarding Gates Loaded!\r\nLoading Flights...\r\n{terminal.Flights.Count} Flights Loaded!\r\n");
+void Main()
+{
+    Console.WriteLine($"{terminal.ToString()}1. List All Flights\r\n2. List Boarding Gates\r\n3. Assign a Boarding Gate to a Flight\r\n4. Create Flight\r\n5. Display Airline Flights\r\n6. Modify Flight Details\r\n7. Display Flight Schedule\r\n0. Exit\r\n\r\nPlease select your option:\r\n");
+    try
+    {
+        int option = Convert.ToInt32(Console.ReadLine());
+        if (option < 8 && option > -1)
+        {
+            if (option == 1)
+            {
+                display_flights();
+            }
+            else if (option == 2)
+            {
+
+            }
+            else if (option == 3) { }
+            else if (option == 4) { }
+            else if (option == 5) { }
+            else if (option == 6) { }
+            else if (option == 7) { }
+            else if (option == 0) { }
+        }
+        else
+        {
+            Console.WriteLine("Please choose a valid option.");
+        }
+    }
+    catch (FormatException ex)
+    {
+        Console.WriteLine(ex.Message);
+    }    
+}
+
+loadfiles_airlines_and_boarding_gates();
+loadfiles_flight();
+Main();
