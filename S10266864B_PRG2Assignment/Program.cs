@@ -549,10 +549,127 @@ void modify_flight_details()
 }
 // advance feature (b) May
 
+//void display_airline_total_fees()
+//{
+//    bool flights_unassigned = false;
+//    foreach (var flight in terminal.Flights) 
+//    {
+//        string gate_name = get_boarding_gate_name(flight.Value);
+//        if (gate_name == null)
+//        {
+//            flights_unassigned = true;
+//            break;
+//        }
+//    }
+//    if (flights_unassigned == false)
+//    {
+//        double subtotal = 0;
+//        foreach (var a in terminal.Airlines)
+//        {
+//            double airline_total = 0;
+//            Airline airline = a.Value;
+//            string airline_name = airline.Name;
+//            foreach (var f in airline.Flights)
+//            {
+//                Flight flight = f.Value;
+//                double flight_total = flight.CalculateFees() + 300;
+//                //Each flight before 11am and after 9pm gets a discount of -100
+//                if (flight.ExpectedTime.TimeOfDay < new TimeSpan(11,0,0) || flight.ExpectedTime.TimeOfDay > new TimeSpan(21, 0, 0))
+//                {
+//                    flight_total -= 110;
+//                }
+//                //Each flight with Origin (Dubai, Bangkok or Tokyo gets -25 discount
+//                if (flight.Origin == "DXB" || flight.Origin == "BKK" || flight.Origin == "NRT")
+//                {
+//                    flight_total -= 25;
+//                }
+//                //Each flight not indicating any special request code
+//                if (flight.GetType() == typeof(NORMFlight))
+//                {
+//                    flight_total -= 50;
+//                }
+//                airline_total += flight_total;
+//            }
+//            //Every 3 flights gets a discount of -350
+//            airline_total -= Math.Floor(airline.Flights.Count() / 3.0) * 350;
+
+
+//            subtotal += airline_total;
+//        }
+//    }
+//    else
+//    {
+//        Console.WriteLine("Please have all the flights assigned to boarding gates to carry out this action.");
+//    }
+//}
+//void main()
+//{
+//    Console.WriteLine($"Loading Airlines...\r\n{terminal.Airlines.Count} Airlines Loaded!\r\nLoading Boarding Gates...\r\n{terminal.BoardingGates.Count} Boarding Gates Loaded!\r\nLoading Flights...\r\n{terminal.Flights.Count} Flights Loaded!\r\n");
+//    bool condition = true;
+//    while (condition)
+//    {
+//        Console.WriteLine($"{terminal.ToString()}1. List All Flights\r\n2. List Boarding Gates\r\n3. Assign a Boarding Gate to a Flight\r\n4. Create Flight\r\n5. Display Airline Flights\r\n6. Modify Flight Details\r\n7. Display Flight Schedule\r\n8. Display Total Fee Per Airline For The Day\r\n0. Exit\r\n\r\nPlease select your option:\r\n");
+//        try
+//        {
+//            int option = Convert.ToInt32(Console.ReadLine());
+//            if (option < 8 && option > -1)
+//            {
+//                if (option == 1)
+//                {
+//                    display_flights();
+//                }
+//                else if (option == 2)
+//                {
+//                    display_boarding_gates();
+//                }
+//                else if (option == 3)
+//                {
+//                    assign_boarding_gate();
+//                }
+//                else if (option == 4)
+//                {
+//                    create_new_flight();
+//                }
+//                else if (option == 5)
+//                {
+//                    display_all_flights_from_airlines();
+//                }
+//                else if (option == 6)
+//                {
+//                    modify_flight_details();
+//                }
+//                else if (option == 7)
+//                {
+//                    display_scheduled_flights();
+//                }
+//                else if (option == 8)
+//                {
+//                    display_airline_total_fees();
+//                }
+//                else if (option == 0)
+//                {
+//                    Console.WriteLine("Goodbye!");
+//                    condition = false;
+//                }
+//            }
+//            else
+//            {
+//                Console.WriteLine("Please choose a valid option.");
+//            }
+//        }
+//        catch (FormatException ex)
+//        {
+//            Console.WriteLine(ex.Message);
+//        }
+//    }
+
+//}
+// advance feature (b) May
+
 void display_airline_total_fees()
 {
     bool flights_unassigned = false;
-    foreach (var flight in terminal.Flights) 
+    foreach (var flight in terminal.Flights)
     {
         string gate_name = get_boarding_gate_name(flight.Value);
         if (gate_name == null)
@@ -564,38 +681,57 @@ void display_airline_total_fees()
     if (flights_unassigned == false)
     {
         double subtotal = 0;
+        double subtotal_discount = 0;
+        double discounted_subtotal = 0;
+        Console.WriteLine($"{"Airline Name",-20} {"Total Fees Before Discount",-30} {"Total Discounts",-20} {"Final Total Fees",-16}");
         foreach (var a in terminal.Airlines)
         {
             double airline_total = 0;
+            double discounts = 0;
             Airline airline = a.Value;
             string airline_name = airline.Name;
             foreach (var f in airline.Flights)
             {
                 Flight flight = f.Value;
                 double flight_total = flight.CalculateFees() + 300;
+
+                airline_total += flight_total;
+
                 //Each flight before 11am and after 9pm gets a discount of -100
-                if (flight.ExpectedTime.TimeOfDay < new TimeSpan(11,0,0) || flight.ExpectedTime.TimeOfDay > new TimeSpan(21, 0, 0))
+                if (flight.ExpectedTime.TimeOfDay < new TimeSpan(11, 0, 0) || flight.ExpectedTime.TimeOfDay > new TimeSpan(21, 0, 0))
                 {
-                    flight_total -= 110;
+                    discounts += 110;
                 }
                 //Each flight with Origin (Dubai, Bangkok or Tokyo gets -25 discount
                 if (flight.Origin == "DXB" || flight.Origin == "BKK" || flight.Origin == "NRT")
                 {
-                    flight_total -= 25;
+                    discounts += 25;
                 }
                 //Each flight not indicating any special request code
                 if (flight.GetType() == typeof(NORMFlight))
                 {
-                    flight_total -= 50;
+                    discounts += 50;
                 }
-                airline_total += flight_total;
+            }
+            //Each airline with more than 5 flights arriving/ departing get 3% discount before any other discount
+            if (airline.Flights.Count() > 5)
+            {
+                discounts += (airline_total * 0.03);
             }
             //Every 3 flights gets a discount of -350
-            airline_total -= Math.Floor(airline.Flights.Count() / 3.0) * 350;
-            
-            
+            discounts += (Math.Floor(airline.Flights.Count() / 3.0) * 350);
+            //Minus all the discounts
+            double discounted_airline_total = airline_total - discounts;
             subtotal += airline_total;
+            subtotal_discount += discounts;
+            discounted_subtotal += discounted_airline_total;
+            Console.WriteLine($"{airline_name,-20} {airline_total,-30} {discounts,-20} {discounted_subtotal,-16}");
         }
+        double discount_percent = (subtotal_discount / subtotal) * 100;
+        Console.WriteLine($"Subtotal of All Airline Fees Before Discount : ${subtotal}");
+        Console.WriteLine($"Subtotal of All Airline Discounts : ${subtotal_discount}");
+        Console.WriteLine($"Final Total of All Airline Fees : ${discounted_subtotal}");
+        Console.WriteLine($"Total Discount Received (in Percentage): {discount_percent}%");
     }
     else
     {
@@ -612,7 +748,7 @@ void main()
         try
         {
             int option = Convert.ToInt32(Console.ReadLine());
-            if (option < 8 && option > -1)
+            if (option < 9 && option > -1)
             {
                 if (option == 1)
                 {
@@ -644,6 +780,9 @@ void main()
                 }
                 else if (option == 8)
                 {
+                    Console.WriteLine("===========================================================");
+                    Console.WriteLine($"Total Fees Per Day for Airlines in {terminal.TerminalName}");
+                    Console.WriteLine("===========================================================");
                     display_airline_total_fees();
                 }
                 else if (option == 0)
@@ -651,6 +790,8 @@ void main()
                     Console.WriteLine("Goodbye!");
                     condition = false;
                 }
+                //Leaving an empty space between the output and the main menu
+                Console.WriteLine("");
             }
             else
             {
@@ -662,7 +803,7 @@ void main()
             Console.WriteLine(ex.Message);
         }
     }
- 
+
 }
 
 loadfiles_airlines_and_boarding_gates();
