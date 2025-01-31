@@ -4,7 +4,7 @@
 // Partner Name	: May Cherry Aung
 //==========================================================
 
-
+using System.Globalization;
 using S10266864B_PRG2Assignment;
 using System.ComponentModel.Design;
 using System.Diagnostics.CodeAnalysis;
@@ -201,10 +201,12 @@ void create_new_flight()
         string origin = Console.ReadLine();
         Console.Write("Enter Destination: ");
         string destination = Console.ReadLine();
-        Console.Write("Enter expected Departure/Arrival time: ");
-        DateTime time = Convert.ToDateTime(Console.ReadLine());
+        Console.Write("Enter expected Departure/Arrival time (dd/mm/yyyy hh:mm): ");
+        string timeString = Console.ReadLine();
+        DateTime time = convert_to_dateTime(timeString);
         Console.Write("Do you want to enter any additional information? (Y/N): ");
         string option = Console.ReadLine();
+
         string special_req = null;
         if (option == "Y")
         {
@@ -250,13 +252,9 @@ void create_new_flight()
         choice = Console.ReadLine().ToUpper();
     }
     
-
-
-
-    
 }
 //question 9 (mingjie)
-void Display_Scheduled_Flights()
+void display_scheduled_flights()
 {
     List<Flight> Flights_list = new List<Flight>();
     foreach (var f in terminal.Flights)
@@ -419,10 +417,6 @@ void display_flight_from_airline()
 
     Console.WriteLine($"{user_flight.FlightNumber,-15}{user_airline.Name,-20}{user_flight.Origin,-20}{user_flight.Destination,-20}{user_flight.ExpectedTime,-35}{special_request_code,-25}{boarding_gate,-20}");
 }
-
-//display_flight_from_airline();
-///*assign_boarding_gate();*/
-//create_new_flight();
 
 // question 8 (May)
 
