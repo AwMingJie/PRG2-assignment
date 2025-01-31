@@ -104,7 +104,7 @@ void display_flights()
 {
     foreach (var f in terminal.Flights)
     {
-        Console.WriteLine(f.Value.ToString());
+        Console.WriteLine();
         
     }
 }
@@ -235,7 +235,8 @@ void create_new_flight()
         Console.Write("Enter Destination: ");
         string destination = Console.ReadLine();
         Console.Write("Enter expected Departure/Arrival time (dd/mm/yyyy hh:mm): ");
-        DateTime time = Convert.ToDateTime(Console.ReadLine());
+        string timeString = Console.ReadLine();
+        DateTime time = convert_to_dateTime(timeString);
         Console.Write("Do you want to enter any additional information? (Y/N): ");
         string option = Console.ReadLine();
 
