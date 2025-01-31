@@ -4,7 +4,7 @@
 // Partner Name	: May Cherry Aung
 //==========================================================
 
-
+using System.Globalization;
 using S10266864B_PRG2Assignment;
 using System.ComponentModel.Design;
 using System.Diagnostics.CodeAnalysis;
@@ -13,7 +13,20 @@ using System.Runtime.InteropServices;
 //Dictionary<string, Airline> Airlines = new Dictionary<string, Airline>();
 //Dictionary<string, Flight> Flights = new Dictionary<string, Flight>();
 //Dictionary<string, BoardingGate> BoardingGates = new Dictionary<string, BoardingGate>();
-
+DateTime convert_to_dateTime(string s)
+{
+    try
+    {
+        DateTime dateTime = DateTime.ParseExact(s, "d/M/yyyy HH:mm", CultureInfo.InvariantCulture);
+        return dateTime;
+    }
+    catch (FormatException ex)
+    {
+        Console.WriteLine(ex.Message);
+        DateTime d = new DateTime(0, 0, 0);
+        return d;
+    }
+}
 Terminal terminal = new Terminal("Changi Airport Terminal 5");
 //question 1 (May)
 void loadfiles_airlines_and_boarding_gates()
@@ -99,7 +112,6 @@ void display_flights()
 //question 4 (May)
 void display_boarding_gates()
 {
-    
     Console.WriteLine("{0, -18} {1,-25 } {2, -13}", "Boarding gates", "Special Request Codes", "Flight Number");
     foreach (var kvp in terminal.BoardingGates)
     {
@@ -222,10 +234,11 @@ void create_new_flight()
         string origin = Console.ReadLine();
         Console.Write("Enter Destination: ");
         string destination = Console.ReadLine();
-        Console.Write("Enter expected Departure/Arrival time: ");
+        Console.Write("Enter expected Departure/Arrival time (dd/mm/yyyy hh:mm): ");
         DateTime time = Convert.ToDateTime(Console.ReadLine());
         Console.Write("Do you want to enter any additional information? (Y/N): ");
         string option = Console.ReadLine();
+
         string special_req = null;
         if (option == "Y")
         {
@@ -271,13 +284,9 @@ void create_new_flight()
         choice = Console.ReadLine().ToUpper();
     }
     
-
-
-
-    
 }
 //question 9 (mingjie)
-void Display_Scheduled_Flights()
+void display_scheduled_flights()
 {
     List<Flight> Flights_list = new List<Flight>();
     foreach (var f in terminal.Flights)
@@ -428,10 +437,6 @@ void display_flight_from_airline()
     Console.WriteLine($"{user_flight.FlightNumber,-15}{user_airline.Name,-20}{user_flight.Origin,-20}{user_flight.Destination,-20}{user_flight.ExpectedTime,-35}{special_request_code,-25}{boarding_gate,-20}");
 }
 
-//display_flight_from_airline();
-///*assign_boarding_gate();*/
-//create_new_flight();
-
 // question 8 (May)
 
 void display_flight_details(Flight f)
@@ -486,10 +491,11 @@ void modify_flight_details()
                     Console.WriteLine("Enter new Destination: ");
                     string new_desti = Console.ReadLine();
                     Console.WriteLine("Enter new Expected Departure/Arrival Time(dd/mm/yyyy hh:mm): ");
-                    string new_time = Console.ReadLine();
+                    string new_time_input = Console.ReadLine();
+                    DateTime new_time_output = convert_to_dateTime(new_time_input);
                     flight_to_modify.Origin = new_origin;
                     flight_to_modify.Destination = new_desti;
-                    flight_to_modify.ExpectedTime = Convert.ToDateTime(new_time);
+                    flight_to_modify.ExpectedTime = new_time_output;
                     Console.WriteLine("Flight updated!");
                     display_flight_details(flight_to_modify);
                 }
@@ -543,16 +549,9 @@ void modify_flight_details()
         }
     }
 }
-//display_flight_from_airline();
-//    /*assign_boarding_gate();*/
-//create_new_flight();
-//    //assign_boarding_gate();
-//    //create_new_flight();
-//Display_Scheduled_Flights();
-//modify_flight_details();
 
 Console.WriteLine($"Loading Airlines...\r\n{terminal.Airlines.Count} Airlines Loaded!\r\nLoading Boarding Gates...\r\n{terminal.BoardingGates.Count} Boarding Gates Loaded!\r\nLoading Flights...\r\n{terminal.Flights.Count} Flights Loaded!\r\n");
-void Main()
+void main()
 {
     Console.WriteLine($"{terminal.ToString()}1. List All Flights\r\n2. List Boarding Gates\r\n3. Assign a Boarding Gate to a Flight\r\n4. Create Flight\r\n5. Display Airline Flights\r\n6. Modify Flight Details\r\n7. Display Flight Schedule\r\n0. Exit\r\n\r\nPlease select your option:\r\n");
     try
@@ -566,14 +565,32 @@ void Main()
             }
             else if (option == 2)
             {
-
+                display_boarding_gates();
             }
-            else if (option == 3) { }
-            else if (option == 4) { }
-            else if (option == 5) { }
-            else if (option == 6) { }
-            else if (option == 7) { }
-            else if (option == 0) { }
+            else if (option == 3) 
+            { 
+                assign_boarding_gate(); 
+            }
+            else if (option == 4) 
+            {
+                create_new_flight();
+            }
+            else if (option == 5) 
+            { 
+                display_flight_from_airline();
+            }
+            else if (option == 6) 
+            { 
+                modify_flight_details();
+            }
+            else if (option == 7) 
+            {
+                display_scheduled_flights();
+            }
+            else if (option == 0) 
+            {
+                Console.WriteLine("Goodbye!");
+            }
         }
         else
         {
@@ -586,6 +603,8 @@ void Main()
     }    
 }
 
+
+
 loadfiles_airlines_and_boarding_gates();
 loadfiles_flight();
-Main();
+main();
