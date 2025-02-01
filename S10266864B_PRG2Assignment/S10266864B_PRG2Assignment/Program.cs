@@ -549,131 +549,61 @@ void modify_flight_details()
         }
     }
 }
-// advance feature (b) May
 
-void display_airline_total_fees()
-{
-    bool flights_unassigned = false;
-    foreach (var flight in terminal.Flights) 
-    {
-        string gate_name = get_boarding_gate_name(flight.Value);
-        if (gate_name == null)
-        {
-            flights_unassigned = true;
-            break;
-        }
-    }
-    if (flights_unassigned == false)
-    {
-        double subtotal = 0;
-        foreach (var a in terminal.Airlines)
-        {
-            double airline_total = 0;
-            Airline airline = a.Value;
-            string airline_name = airline.Name;
-            foreach (var f in airline.Flights)
-            {
-                Flight flight = f.Value;
-                double flight_total = flight.CalculateFees() + 300;
-                //Each flight before 11am and after 9pm gets a discount of -100
-                if (flight.ExpectedTime.TimeOfDay < new TimeSpan(11,0,0) || flight.ExpectedTime.TimeOfDay > new TimeSpan(21, 0, 0))
-                {
-                    flight_total -= 110;
-                }
-                //Each flight with Origin (Dubai, Bangkok or Tokyo gets -25 discount
-                if (flight.Origin == "DXB" || flight.Origin == "BKK" || flight.Origin == "NRT")
-                {
-                    flight_total -= 25;
-                }
-                //Each flight not indicating any special request code
-                if (flight.GetType() == typeof(NORMFlight))
-                {
-                    flight_total -= 50;
-                }
-                airline_total += flight_total;
-            }
-            //Every 3 flights gets a discount of -350
-            airline_total -= Math.Floor(airline.Flights.Count() / 3.0) * 350;
-            
-            
-            subtotal += airline_total;
-        }
-    }
-    else
-    {
-        Console.WriteLine("Please have all the flights assigned to boarding gates to carry out this action.");
-    }
-}
+Console.WriteLine($"Loading Airlines...\r\n{terminal.Airlines.Count} Airlines Loaded!\r\nLoading Boarding Gates...\r\n{terminal.BoardingGates.Count} Boarding Gates Loaded!\r\nLoading Flights...\r\n{terminal.Flights.Count} Flights Loaded!\r\n");
 void main()
 {
-    Console.WriteLine($"Loading Airlines...\r\n{terminal.Airlines.Count} Airlines Loaded!\r\nLoading Boarding Gates...\r\n{terminal.BoardingGates.Count} Boarding Gates Loaded!\r\nLoading Flights...\r\n{terminal.Flights.Count} Flights Loaded!\r\n");
-    bool condition = true;
-    while (condition)
+    Console.WriteLine($"{terminal.ToString()}1. List All Flights\r\n2. List Boarding Gates\r\n3. Assign a Boarding Gate to a Flight\r\n4. Create Flight\r\n5. Display Airline Flights\r\n6. Modify Flight Details\r\n7. Display Flight Schedule\r\n0. Exit\r\n\r\nPlease select your option:\r\n");
+    try
     {
-        Console.WriteLine($"{terminal.ToString()}1. List All Flights\r\n2. List Boarding Gates\r\n3. Assign a Boarding Gate to a Flight\r\n4. Create Flight\r\n5. Display Airline Flights\r\n6. Modify Flight Details\r\n7. Display Flight Schedule\r\n8. Display Total Fee Per Airline For The Day\r\n9. Assign Flights In Bulk\r\n0. Exit\r\n\r\nPlease select your option:\r\n");
-        try
+        int option = Convert.ToInt32(Console.ReadLine());
+        if (option < 8 && option > -1)
         {
-            int option = Convert.ToInt32(Console.ReadLine());
-            if (option < 10 && option > -1)
+            if (option == 1)
             {
-                if (option == 1)
-                {
-                    display_flights();
-                }
-                else if (option == 2)
-                {
-                    display_boarding_gates();
-                }
-                else if (option == 3)
-                {
-                    assign_boarding_gate();
-                }
-                else if (option == 4)
-                {
-                    create_new_flight();
-                }
-                else if (option == 5)
-                {
-                    display_all_flights_from_airlines();
-                }
-                else if (option == 6)
-                {
-                    modify_flight_details();
-                }
-                else if (option == 7)
-                {
-                    display_scheduled_flights();
-                }
-                else if (option == 8)
-                {
-                    display_airline_total_fees();
-                }
-                // Advance feature A: 
-                else if (option == 9)
-                {
-                    
-                    terminal.AdvancedA();
-                    display_boarding_gates();
-                }
-                else if (option == 0)
-                {
-                    
-                    Console.WriteLine("Goodbye!");
-                    condition = false;
-                }
+                display_flights();
             }
-            else
+            else if (option == 2)
             {
-                Console.WriteLine("Please choose a valid option.");
+                display_boarding_gates();
+            }
+            else if (option == 3) 
+            { 
+                assign_boarding_gate(); 
+            }
+            else if (option == 4) 
+            {
+                create_new_flight();
+            }
+            else if (option == 5) 
+            { 
+                display_flight_from_airline();
+            }
+            else if (option == 6) 
+            { 
+                modify_flight_details();
+            }
+            else if (option == 7) 
+            {
+                display_scheduled_flights();
+            }
+            else if (option == 0) 
+            {
+                Console.WriteLine("Goodbye!");
             }
         }
-        catch (FormatException ex)
+        else
         {
-            Console.WriteLine(ex.Message);
+            Console.WriteLine("Please choose a valid option.");
         }
     }
- 
+    catch (FormatException ex)
+    {
+        Console.WriteLine(ex.Message);
+    }    
 }
+
+
 
 loadfiles_airlines_and_boarding_gates();
 loadfiles_flight();
