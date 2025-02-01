@@ -603,8 +603,6 @@ void main()
     }    
 }
 
-
-
 loadfiles_airlines_and_boarding_gates();
 loadfiles_flight();
 put_flights_into_airlines();
