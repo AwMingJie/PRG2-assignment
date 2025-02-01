@@ -72,7 +72,7 @@ namespace S10266864B_PRG2Assignment
 			
 			else
 			{
-                s = $"Gate Name: {gateName,-10} Flight: {flight,-10}";
+                s = $"Gate Name: {gateName,-10} Flight: {flight.ToString(),-10}";
             }
 			return s;
 			 
