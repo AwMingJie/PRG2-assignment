@@ -551,13 +551,13 @@ void modify_flight_details()
 }
 
 Console.WriteLine($"Loading Airlines...\r\n{terminal.Airlines.Count} Airlines Loaded!\r\nLoading Boarding Gates...\r\n{terminal.BoardingGates.Count} Boarding Gates Loaded!\r\nLoading Flights...\r\n{terminal.Flights.Count} Flights Loaded!\r\n");
-void main()
+bool main()
 {
-    Console.WriteLine($"{terminal.ToString()}1. List All Flights\r\n2. List Boarding Gates\r\n3. Assign a Boarding Gate to a Flight\r\n4. Create Flight\r\n5. Display Airline Flights\r\n6. Modify Flight Details\r\n7. Display Flight Schedule\r\n0. Exit\r\n\r\nPlease select your option:\r\n");
+    Console.WriteLine($"{terminal.ToString()}1. List All Flights\r\n2. List Boarding Gates\r\n3. Assign a Boarding Gate to a Flight\r\n4. Create Flight\r\n5. Display Airline Flights\r\n6. Modify Flight Details\r\n7. Display Flight Schedule\r\n8. Assign Flight In Bulk\r\n0. Exit\r\n\r\nPlease select your option:\r\n");
     try
     {
         int option = Convert.ToInt32(Console.ReadLine());
-        if (option < 8 && option > -1)
+        if (option < 9 && option > -1)
         {
             if (option == 1)
             {
@@ -587,23 +587,37 @@ void main()
             {
                 display_scheduled_flights();
             }
+            else if (option == 8)
+            {
+                terminal.AdvancedA();
+            }
+
             else if (option == 0) 
             {
                 Console.WriteLine("Goodbye!");
+                return false;
             }
         }
         else
         {
             Console.WriteLine("Please choose a valid option.");
         }
+        return true;
     }
     catch (FormatException ex)
     {
         Console.WriteLine(ex.Message);
+        return true;
     }    
 }
 
 loadfiles_airlines_and_boarding_gates();
 loadfiles_flight();
 put_flights_into_airlines();
-main();
+/*bool test = true;
+while (test)
+{
+    test = main();
+}*/
+
+while (main()) { }

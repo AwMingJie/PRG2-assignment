@@ -201,7 +201,7 @@ namespace S10266864B_PRG2Assignment
                         {
                             bg.Value.Flight = flight;
                             boardingGates[bg.Key].Flight = flight;
-                            Console.WriteLine("Normal Flight: ");
+                            Console.WriteLine(bg.Value.ToString());
                             unassigned_boarding_gate.Remove(bg.Key);
                             i++;
                             break;
@@ -216,7 +216,7 @@ namespace S10266864B_PRG2Assignment
                         {
                             bg.Value.Flight = flight;
                             boardingGates[bg.Key].Flight = flight;
-                            Console.WriteLine("CFFT Flight: ");
+                            Console.WriteLine(bg.Value.ToString());
                             unassigned_boarding_gate.Remove(bg.Key);
                             i++;
                             break;
@@ -231,7 +231,7 @@ namespace S10266864B_PRG2Assignment
                         {
                             bg.Value.Flight = flight;
                             boardingGates[bg.Key].Flight = flight;
-                            Console.WriteLine("DDJB Flight: ");
+                            Console.WriteLine(bg.Value.ToString());
                             unassigned_boarding_gate.Remove(bg.Key);
                             i++;
                             break;
@@ -246,7 +246,7 @@ namespace S10266864B_PRG2Assignment
                         {
                             bg.Value.Flight = flight;
                             boardingGates[bg.Key].Flight = flight;
-                            Console.WriteLine("LWTT Flight: ");
+                            Console.WriteLine(bg.Value.ToString());
                             unassigned_boarding_gate.Remove(bg.Key);
                             i++;
                             break;
