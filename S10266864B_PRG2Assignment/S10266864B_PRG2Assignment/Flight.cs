@@ -74,9 +74,16 @@ namespace S10266864B_PRG2Assignment
 		{
 			return ExpectedTime.CompareTo(f.ExpectedTime);
 		}
+
+		public string DisplayFlightToString(string airline_name)
+		{
+            return $"{flightNumber,-15} {airline_name, -20} {origin,-20} {destination,-25} {expectedTime,-25}";
+        }
+
 		public string ToString()
 		{
-			return $"FlightNumber: {flightNumber,-15} Origin: {origin,-20} Destination: {destination,-15} ExpectedTime: {expectedTime,-25} Status: {status,-15}";
+			
+			return $"{flightNumber,-15} {origin,-20} {destination,-15} {expectedTime,-25}";
 		}
 	}
 }

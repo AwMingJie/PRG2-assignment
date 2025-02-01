@@ -77,5 +77,17 @@ namespace S10266864B_PRG2Assignment
 			return s;
 			 
         }
+
+		public bool IsNormal()
+		{
+			if (supportsCFFT == false && supportsDDJB == false && supportsLWTT == false)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
     }
 }
