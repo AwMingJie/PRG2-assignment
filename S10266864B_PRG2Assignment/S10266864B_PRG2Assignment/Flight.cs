@@ -57,18 +57,9 @@ namespace S10266864B_PRG2Assignment
 			ExpectedTime = expectedTime;
 			Status = status;
 		}
-		public double CalculateFees()
+		public virtual double CalculateFees()
 		{
-            double total_fee = 0.0;
-			if (destination == "SIN")
-			{
-				total_fee += 500;
-			}
-			else if (origin == "SIN")
-			{
-				total_fee += 800;
-			}	
-			return total_fee;
+			return 300;
         }
 		public int CompareTo(Flight f)
 		{

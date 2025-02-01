@@ -94,6 +94,7 @@ void loadfiles_flight()
 //question 3 (Ming Jie)
 void display_flights()
 {
+    Console.WriteLine($"=============================================\r\nList of Flights for {terminal.TerminalName}\r\n=============================================\r\n");
     Console.WriteLine($"{ "Flight Number",-15} { "Airline Name",-20} { "Origin",-20} { "Destination",-25} { "Expected Departure/Arrival Time",-15}");
 
     foreach (var f in terminal.Flights)
@@ -114,6 +115,10 @@ void display_boarding_gates()
         {
             flight = kvp.Value.Flight.FlightNumber;
         }
+        else
+        {
+            flight = "None";
+        }
         Console.WriteLine($"{kvp.Value.GateName,-14} {kvp.Value.SupportsDDJB,-12} {kvp.Value.SupportsCFFT,-12} {kvp.Value.SupportsLWTT,-12} {flight,-13}");
     }
 }
@@ -121,6 +126,7 @@ void display_boarding_gates()
 //question 5 (mingjie)
 void assign_boarding_gate()
 {
+    Console.WriteLine($"=============================================\r\nAssign a Boarding Gate to a Flight\r\n=============================================\r\n");
     Console.Write("Enter Flight Number: ");
     string flight_num = Console.ReadLine();
     bool flag = false;
@@ -152,7 +158,7 @@ void assign_boarding_gate()
                     {
 
                         b.Value.Flight = flight;
-                        Console.WriteLine(flight.ToString() + $"Boarding Gate: {boardingGate}");
+                        Console.WriteLine($"Flight Number: {flight.FlightNumber}\r\nOrigin: {flight.Origin}\r\nDestination: {flight.Destination}\r\nExpected Time: {flight.ExpectedTime}\r\nSpecial Request Code: {get_special_request(flight)}\r\nBoarding Gate Name: {b.Value.GateName}\r\nSupports DDJB: {b.Value.SupportsDDJB}\r\nSupports CFFT: {b.Value.SupportsCFFT}\r\nSupports LWTT: {b.Value.SupportsLWTT}\r\n");
                         condition = false;
                     }
                     else
@@ -171,12 +177,23 @@ void assign_boarding_gate()
             string choice = Console.ReadLine();
             if (choice == "Y")
             {
-
-                Console.Write("Enter the new status of the flight(Delayed/Boarding/On Time): ");
-                string status = Console.ReadLine();
+                Console.WriteLine("1. Delayed\r\n2. Boarding\r\n3. On Time\r\nPlease select the new status of the flight:\r\n");
+                int option = Convert.ToInt32(Console.ReadLine());
+                string status;
+                if (option == 1)
+                {
+                    status = "Delayed";
+                }
+                else if (option == 2)
+                {
+                    status = "Boarding";
+                }
+                else
+                {
+                    status = "On Time";
+                }
                 flight.Status = status;
                 Console.WriteLine("Boarding Gate successfully assigned!");
-                
                 condition = true;
             }
             else if (choice == "N")
@@ -248,7 +265,7 @@ void create_new_flight()
             sw.WriteLine(flightno+","+origin+","+destination+","+time.ToString("HH:mm tt")+","+special_req);
             sw.Close();
         }
-        Console.WriteLine("The flight(s) have been successfully added!");
+        Console.WriteLine($"The flight {flightno} have been successfully added!");
 
         Console.Write("Do you want to add another Flight? (Y/N) : ");
         choice = Console.ReadLine().ToUpper();
@@ -258,6 +275,7 @@ void create_new_flight()
 //question 9 (mingjie)
 void display_scheduled_flights()
 {
+    Console.WriteLine($"=============================================\r\nFlight Schedule for {terminal.TerminalName}\r\n=============================================\r\n");
     List<Flight> Flights_list = new List<Flight>();
     foreach (var f in terminal.Flights)
     {
@@ -344,7 +362,7 @@ void list_airline_flights(Airline user_airline)
         Console.WriteLine("==============================================");
         Console.WriteLine($"List of Flights for {user_airline.Name}");
         Console.WriteLine("==============================================");
-        Console.WriteLine($"{"Airline Number",-20}{"Airline Name", -20}{"Origin",-20}{"Destination",-20}{"Expected Departure/Arrival Time",-30}");
+        Console.WriteLine($"{"Flight Number",-20}{"Airline Name", -20}{"Origin",-20}{"Destination",-20}{"Expected Departure/Arrival Time",-30}");
         foreach (var f in user_airline.Flights)
         {
             Console.WriteLine($"{f.Value.FlightNumber,-20}{user_airline.Name, -20}{f.Value.Origin,-20}{f.Value.Destination,-20}{f.Value.ExpectedTime.ToString("dd/MM/yyyy h:mm:ss tt"),-30}");
@@ -366,7 +384,7 @@ string get_boarding_gate_name(Flight user_flight)
 }
 string get_special_request(Flight f)
 {
-    string special_request_code = "";
+    string special_request_code = "None";
     foreach (var f1 in terminal.Flights)
     {
         if (f1.Value == f)
@@ -550,14 +568,76 @@ void modify_flight_details()
     }
 }
 
-Console.WriteLine($"Loading Airlines...\r\n{terminal.Airlines.Count} Airlines Loaded!\r\nLoading Boarding Gates...\r\n{terminal.BoardingGates.Count} Boarding Gates Loaded!\r\nLoading Flights...\r\n{terminal.Flights.Count} Flights Loaded!\r\n");
+void AdvancedB()
+{
+    bool unassigned_flights = false;
+    foreach (var flight in terminal.Flights)
+    {
+        string gate_name = get_boarding_gate_name(flight.Value);
+        if (gate_name == "Unassigned")
+        {
+            unassigned_flights = true;
+            break;
+        }
+    }
+
+    if (unassigned_flights == false) // all flights have been assigned
+    {
+        double terminal_total = 0;
+        double terminal_discount = 0;
+        double terminal_discounted_total = 0;
+        Console.WriteLine($"{"Airline Name",-20} {"Total Fees Before Discount",-30} {"Total Discounts",-19} {"Final Total Fees",-16}");
+        foreach (var a in terminal.Airlines)
+        {
+            double airline_total = 0;
+            double airline_discount = 0;
+            foreach (var f in a.Value.Flights)
+            {
+                double flight_total = f.Value.CalculateFees();
+                double flight_discount = 0;
+                airline_total += flight_total;
+                //Each flight before 11am and after 9pm gets a discount of -100
+                if (f.Value.ExpectedTime.TimeOfDay < new TimeSpan(11, 0, 0) || f.Value.ExpectedTime.TimeOfDay > new TimeSpan(21, 0, 0))
+                {
+                    flight_discount += 110;
+                }
+                //Each flight with Origin (Dubai, Bangkok or Tokyo gets -25 discount
+                if (f.Value.Origin == "DXB" || f.Value.Origin == "BKK" || f.Value.Origin == "NRT")
+                {
+                    flight_discount += 25;
+                }
+                //Each flight not indicating any special request code
+                if (f.Value.GetType() == typeof(NORMFlight))
+                {
+                    flight_discount += 50;
+                }
+                airline_discount += flight_discount;
+            }
+            double airline_discounted_total = airline_total - airline_discount;
+            terminal_total += airline_total;
+            terminal_discount += airline_discount;
+            terminal_discounted_total += airline_discounted_total;
+            Console.WriteLine($"{a.Value.Name,-20} {airline_total,26} {airline_discount,19} {airline_discounted_total,20}");
+        }
+        double discount_percent = (terminal_discount / terminal_total) * 100;
+        Console.WriteLine($"Subtotal of All Airline Fees Before Discount : ${terminal_total}");
+        Console.WriteLine($"Subtotal of All Airline Discounts : ${terminal_discount}");
+        Console.WriteLine($"Final Total of All Airline Fees : ${terminal_discounted_total}");
+        Console.WriteLine($"Total Discount Received (in Percentage): {discount_percent.ToString("0.00")}%");
+    }
+    else
+    {
+        Console.WriteLine("Please have all the flights assigned to boarding gates to carry out this action.");
+    }
+}
+
 bool main()
 {
-    Console.WriteLine($"{terminal.ToString()}1. List All Flights\r\n2. List Boarding Gates\r\n3. Assign a Boarding Gate to a Flight\r\n4. Create Flight\r\n5. Display Airline Flights\r\n6. Modify Flight Details\r\n7. Display Flight Schedule\r\n8. Assign Flight In Bulk\r\n0. Exit\r\n\r\nPlease select your option:\r\n");
+    Console.WriteLine($"{terminal.ToString()}1. List All Flights\r\n2. List Boarding Gates\r\n3. Assign a Boarding Gate to a Flight\r\n4. Create Flight\r\n5. Display Airline Flights\r\n6. Modify Flight Details\r\n7. Display Flight Schedule\r\n8. Assign Flight In Bulk\r\n9. Calculate Airline Fees\r\n0. Exit\r\n\r\nPlease select your option:\r\n");
     try
     {
         int option = Convert.ToInt32(Console.ReadLine());
-        if (option < 9 && option > -1)
+        if (option < 10 && option > -1)
         {
             if (option == 1)
             {
@@ -576,8 +656,8 @@ bool main()
                 create_new_flight();
             }
             else if (option == 5) 
-            { 
-                display_flight_from_airline();
+            {
+                display_all_flights_from_airlines();
             }
             else if (option == 6) 
             { 
@@ -591,12 +671,18 @@ bool main()
             {
                 terminal.AdvancedA();
             }
+            else if (option == 9)
+            {
+                AdvancedB();
+            }
 
             else if (option == 0) 
             {
                 Console.WriteLine("Goodbye!");
                 return false;
             }
+            //To make space between output and menu
+            Console.WriteLine("");
         }
         else
         {
@@ -620,4 +706,5 @@ while (test)
     test = main();
 }*/
 
+Console.WriteLine($"Loading Airlines...\r\n{terminal.Airlines.Count} Airlines Loaded!\r\nLoading Boarding Gates...\r\n{terminal.BoardingGates.Count} Boarding Gates Loaded!\r\nLoading Flights...\r\n{terminal.Flights.Count} Flights Loaded!\r\n");
 while (main()) { }

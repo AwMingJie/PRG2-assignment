@@ -19,9 +19,19 @@ namespace S10266864B_PRG2Assignment
         {
             RequestFee = requestFee;
         }
-        public double CalculateFee()
+        public override double CalculateFees()
         {
-            return base.CalculateFees() + RequestFee;
+            double total_fee = 0.0;
+            if (Destination == "Singapore (SIN)")
+            {
+                total_fee += 500;
+            }
+            if (Origin == "Singapore (SIN)")
+            {
+                total_fee += 800;
+            }
+            total_fee += RequestFee;
+            return base.CalculateFees() + total_fee;
         }
         public string ToString()
         {

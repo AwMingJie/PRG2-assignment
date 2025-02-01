@@ -16,9 +16,18 @@ namespace S10266864B_PRG2Assignment
     {
         public NORMFlight(string flightNumber, string origin, string destination, DateTime expectedTime, string status) : base(flightNumber, origin, destination, expectedTime, status) 
         { }
-        public double CalculateFee()
+        public double CalculateFees()
         {
-            return base.CalculateFees();
+            double total_fee = 0.0;
+            if (Destination == "Singapore (SIN)")
+            {
+                total_fee += 500;
+            }
+            if (Origin == "Singapore (SIN)")
+            {
+                total_fee += 800;
+            }
+            return base.CalculateFees() + total_fee;
         }
         public string ToString()
         {
