@@ -274,6 +274,7 @@ void create_new_flight()
 void display_scheduled_flights()
 {
     Console.WriteLine($"=============================================\r\nFlight Schedule for {terminal.TerminalName}\r\n=============================================\r\n");
+    Console.WriteLine($"{"Flight Number", 15}{"Airline Name", 20}{"Origin", 20}{"Destination", 20}{"Expected Departure/Arrival Time", 35}{"Status", 9}{"Boarding Gate", 15}");
     List<Flight> Flights_list = new List<Flight>();
     foreach (var f in terminal.Flights)
     {
@@ -283,6 +284,9 @@ void display_scheduled_flights()
     
     foreach (var f in Flights_list)
     {
+        string flightnum = f.FlightNumber;
+        string[] flightnumArray = flightnum.Split(" ");
+        Airline a = get_user_airline(flightnumArray[0]);
         bool flag = false;
         BoardingGate temp = null;
         foreach (var b in terminal.BoardingGates)
@@ -294,11 +298,13 @@ void display_scheduled_flights()
         
         if (flag)
         {
-            Console.WriteLine(f.ToString()+ $"Boarding Gate: {temp.GateName}" );
+            //Console.WriteLine(f.ToString()+ $"Boarding Gate: {temp.GateName}" );
+            Console.WriteLine($"{f.FlightNumber, 15}{a.Name, 20}{f.Origin, -20}{f.Destination, 20}{f.ExpectedTime, 35}{f.Status, 9}{temp.GateName, 15}");
         }
         else
         {
-            Console.WriteLine(f.ToString());
+            //Console.WriteLine(f.ToString());
+            Console.WriteLine($"{f.FlightNumber,15}{a.Name,20}{f.Origin,20}{f.Destination,20}{f.ExpectedTime,35}{f.Status,9}{"Unassigned",15}");
         }
     }
 }
@@ -559,7 +565,7 @@ void modify_flight_details()
                     }
                     else if (modify_choice == "2")
                     {
-                        Console.Write("Enter new Status");
+                        Console.Write("Enter new Status: ");
                         string new_status = Console.ReadLine();
                         flight_to_modify.Status = new_status;
                         Console.WriteLine("Status modified");
@@ -612,7 +618,8 @@ void modify_flight_details()
                 }
                 else if (choice == "2")
                 {
-                    user_airline.RemoveFlight(flight_to_modify);
+                    Console.WriteLine($"Flight {flight_to_modify.FlightNumber} has been removed.");
+                    user_airline.RemoveFlight(flight_to_modify);        
                 }
                 else
                 {
