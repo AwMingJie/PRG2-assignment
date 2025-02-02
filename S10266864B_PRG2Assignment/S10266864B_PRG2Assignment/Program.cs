@@ -319,10 +319,10 @@ void display_airlines()
 }
 
 //Another function to get user_airline
-Airline get_user_airline ()
+Airline get_user_airline(string code)
 {
-    Console.Write("Enter Airline Code: ");
-    string? code = Console.ReadLine();
+    //Console.Write("Enter Airline Code: ");
+    //string? code = Console.ReadLine();
     Airline user_airline = null;
     foreach (var a in terminal.Airlines)
     {
@@ -406,34 +406,64 @@ string get_special_request(Flight f)
     return special_request_code;
 }
 
+bool check_airline_input(string input)
+{
+    //Create a list of airline codes
+    List<string> airline_codes = new List<string>();
+    foreach (var kvp in terminal.Airlines)
+    {
+        airline_codes.Add(kvp.Value.Code);
+    }
+    if (airline_codes.Contains(input))
+    {
+        return true;
+    }
+    else
+    {
+        Console.WriteLine("Please enter the airline code (e.g, SQ).");
+        return false;
+    }
+}
 void display_all_flights_from_airlines()
 {
     display_airlines();
-    Airline user_airline = get_user_airline();
-    list_airline_flights(user_airline);
+    Console.Write("Enter Airline Code: ");
+    string? user_input = Console.ReadLine();
+    bool check_input = check_airline_input(user_input);
+    if (check_input)
+    {
+        Airline user_airline = get_user_airline(user_input);
+        list_airline_flights(user_airline);
+    }
 }
 
 //question 7 (May)
 void display_flight_from_airline()
 {
     display_airlines();
-    Airline user_airline = get_user_airline();
-    list_airline_flights(user_airline);
-    Console.Write("Enter the flight number to select: ");
-    string user_flight_num = Console.ReadLine();
-    Flight user_flight = null;
-    foreach (var f in terminal.Flights)
+    Console.Write("Enter Airline Code: ");
+    string? user_input = Console.ReadLine();
+    bool check_input = check_airline_input(user_input);
+    if (check_input)
     {
-        if (f.Value.FlightNumber == user_flight_num)
+        Airline user_airline = get_user_airline(user_input);
+        list_airline_flights(user_airline);
+        Console.Write("Enter the flight number to select: ");
+        string user_flight_num = Console.ReadLine();
+        Flight user_flight = null;
+        foreach (var f in terminal.Flights)
         {
-            user_flight = f.Value;
+            if (f.Value.FlightNumber == user_flight_num)
+            {
+                user_flight = f.Value;
+            }
         }
-    }
-    string boarding_gate = get_boarding_gate_name(user_flight);
-    string special_request_code = get_special_request(user_flight);
-    Console.WriteLine($"{"Flight Number",-15}{"Airline name",-20}{"Origin",-20}{"Destination",-20}{"Expected Departure/Arrival Time",-35}{"Special Request Code",-25}{"Boarding Gate",-20}");
+        string boarding_gate = get_boarding_gate_name(user_flight);
+        string special_request_code = get_special_request(user_flight);
+        Console.WriteLine($"{"Flight Number",-15}{"Airline name",-20}{"Origin",-20}{"Destination",-20}{"Expected Departure/Arrival Time",-35}{"Special Request Code",-25}{"Boarding Gate",-20}");
 
-    Console.WriteLine($"{user_flight.FlightNumber,-15}{user_airline.Name,-20}{user_flight.Origin,-20}{user_flight.Destination,-20}{user_flight.ExpectedTime,-35}{special_request_code,-25}{boarding_gate,-20}");
+        Console.WriteLine($"{user_flight.FlightNumber,-15}{user_airline.Name,-20}{user_flight.Origin,-20}{user_flight.Destination,-20}{user_flight.ExpectedTime,-35}{special_request_code,-25}{boarding_gate,-20}");
+    }
 }
 
 // question 8 (May)
@@ -466,101 +496,126 @@ void modify_flight_details()
 
 {
     display_airlines();
-    Airline user_airline = get_user_airline();
-    list_airline_flights(user_airline);
-
-    //Ask user to choose a flight to modify or delete
-
-    Console.Write("[1] choose an existing Flight to modify, or delete: ");
-    string flight_number = Console.ReadLine();
-    Flight flight_to_modify = null;
-    foreach (var f in terminal.Flights)
+    Console.Write("Enter Airline Code: ");
+    string? user_input = Console.ReadLine();
+    bool check_input = check_airline_input(user_input);
+    if (check_input)
     {
-        if (f.Key == flight_number)
+        Airline user_airline = get_user_airline(user_input);
+        list_airline_flights(user_airline);
+
+        //Ask user to choose a flight to modify or delete
+
+        Console.Write("[1] choose an existing Flight to modify, or delete: ");
+        string flight_number = Console.ReadLine();
+        if (terminal.Flights.ContainsKey(flight_number) == false)
         {
-            flight_to_modify = f.Value;
-            Console.WriteLine("1. Modify Flight" + "\n" +
-                "2. Delete Flight");
-            Console.Write("Choose an option: ");
-            string choice = Console.ReadLine();
-            if (choice == "1")
+            Console.WriteLine("The flight number was entered incorrectly. Please start over.");
+
+        }
+        Flight flight_to_modify = null;
+        foreach (var f in terminal.Flights)
+        {
+            if (f.Key == flight_number)
             {
-                Console.WriteLine(
-                    "1. Modify Basic Information" + "\n" +
-                    "2. Modify Status" + "\n" +
-                    "3. Modify Special Request Code" + "\n" +
-                    "4. Modify Boarding Gate"
-                    );
+                flight_to_modify = f.Value;
+                Console.WriteLine("1. Modify Flight" + "\n" +
+                    "2. Delete Flight");
                 Console.Write("Choose an option: ");
-                string modify_choice = Console.ReadLine();
-                if (modify_choice == "1")
+                string choice = Console.ReadLine();
+                if (choice == "1")
                 {
-                    Console.Write("Enter new Origin: ");
-                    string new_origin = Console.ReadLine();
-                    Console.Write("Enter new Destination: ");
-                    string new_desti = Console.ReadLine();
-                    Console.Write("Enter new Expected Departure/Arrival Time(dd/mm/yyyy hh:mm): ");
-                    string new_time_input = Console.ReadLine();
-                    try
+                    Console.WriteLine(
+                        "1. Modify Basic Information" + "\n" +
+                        "2. Modify Status" + "\n" +
+                        "3. Modify Special Request Code" + "\n" +
+                        "4. Modify Boarding Gate"
+                        );
+                    Console.Write("Choose an option: ");
+                    string modify_choice = Console.ReadLine();
+                    if (modify_choice == "1")
                     {
-                        DateTime new_time_output = convert_to_dateTime(new_time_input);
-                        flight_to_modify.ExpectedTime = new_time_output;
-                        flight_to_modify.Origin = new_origin;
-                        flight_to_modify.Destination = new_desti;
-                        Console.WriteLine("Flight updated!");
+                        Console.Write("Enter new Origin: ");
+                        string new_origin = Console.ReadLine();
+                        Console.Write("Enter new Destination: ");
+                        string new_desti = Console.ReadLine();
+                        Console.Write("Enter new Expected Departure/Arrival Time(dd/mm/yyyy hh:mm): ");
+                        string new_time_input = Console.ReadLine();
+                        try
+                        {
+                            DateTime new_time_output = convert_to_dateTime(new_time_input);
+                            flight_to_modify.ExpectedTime = new_time_output;
+                            flight_to_modify.Origin = new_origin;
+                            flight_to_modify.Destination = new_desti;
+                            Console.WriteLine("Flight updated!");
+                            display_flight_details(flight_to_modify);
+                        }
+                        catch (FormatException ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
+                    }
+                    else if (modify_choice == "2")
+                    {
+                        Console.Write("Enter new Status");
+                        string new_status = Console.ReadLine();
+                        flight_to_modify.Status = new_status;
+                        Console.WriteLine("Status modified");
                         display_flight_details(flight_to_modify);
                     }
-                    catch (FormatException ex)
+                    else if (modify_choice == "3")
                     {
-                        Console.WriteLine(ex.Message);
-                    }   
-                }
-                else if (modify_choice == "2")
-                {
-                    Console.Write("Enter new Status");
-                    string new_status = Console.ReadLine();
-                    flight_to_modify.Status = new_status;
-                    Console.WriteLine("Status modified");
-                    display_flight_details(flight_to_modify);
-                }
-                else if (modify_choice == "3")
-                {
-                    Console.Write("Enter new special request code: ");
-                    string new_special_request = Console.ReadLine();
-                    create_flights(flight_to_modify.FlightNumber, flight_to_modify.Origin, flight_to_modify.Destination, flight_to_modify.ExpectedTime, flight_to_modify.Status, new_special_request);
-                    Console.WriteLine("Special request code modified.");
-                    display_flight_details(flight_to_modify);
-                }
-                else if (modify_choice == "4")
-                {
-                    Console.Write("Enter new boarding gate: ");
-                    string new_boarding_gate = Console.ReadLine();
-                    string boarding_gate = get_boarding_gate_name(flight_to_modify);
-
-                    foreach (var b in terminal.BoardingGates)
-                    {
-                        if (b.Key == boarding_gate)
+                        Console.Write("Enter new special request code('None' for no special requests): ");
+                        string new_special_request = Console.ReadLine();
+                        List<string> special_request_list = new List<string> { "DDJB", "LWTT", "CFFT", "None" };
+                        if (special_request_list.Contains(new_special_request))
                         {
-                            b.Value.Flight = null;
+                            Console.WriteLine("Special request code modified.");
                         }
-                        if (b.Key == new_boarding_gate)
+                        else
                         {
-                            if(b.Value.Flight == null)
+                            Console.WriteLine("Special request code entered incorrectly. Please start over.");
+                        }
+                    }
+                    else if (modify_choice == "4")
+                    {
+                        Console.Write("Enter new boarding gate: ");
+                        string new_boarding_gate = Console.ReadLine();
+                        string boarding_gate = get_boarding_gate_name(flight_to_modify);
+
+                        foreach (var b in terminal.BoardingGates)
+                        {
+                            if (b.Key == boarding_gate)
                             {
-                                b.Value.Flight = flight_to_modify;
+                                b.Value.Flight = null;
                             }
-                            else
+                            if (b.Key == new_boarding_gate)
                             {
-                                Console.WriteLine("This boarding gate is already assigned with another flight. You cannot assign to this boarding gate.");
+                                if (b.Value.Flight == null)
+                                {
+                                    b.Value.Flight = flight_to_modify;
+                                    Console.WriteLine("Boarding gate successfully assigned.");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("This boarding gate is already assigned with another flight. You cannot assign to this boarding gate.");
+                                }
                             }
                         }
                     }
+                    else
+                    {
+                        Console.WriteLine("Invalid choice. Please start over.");
+                    }
                 }
-
-            }
-            else
-            {
-                user_airline.RemoveFlight(flight_to_modify);
+                else if (choice == "2")
+                {
+                    user_airline.RemoveFlight(flight_to_modify);
+                }
+                else
+                {
+                    Console.WriteLine("Invalid choice. Please start over.");
+                }
             }
         }
     }
