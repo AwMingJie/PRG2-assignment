@@ -122,89 +122,100 @@ void display_boarding_gates()
         Console.WriteLine($"{kvp.Value.GateName,-14} {kvp.Value.SupportsDDJB,-12} {kvp.Value.SupportsCFFT,-12} {kvp.Value.SupportsLWTT,-12} {flight,-13}");
     }
 }
+// Returns a "" if input doesnt match
+string check_str_is_a_str(string input_str)
+{
+    try
+    {
+        Console.Write(input_str);
+        string str = Console.ReadLine();
+        try
+        {
+            int temp = int.Parse(str);
+        }
+        catch (FormatException ex)
+        {
+            return str;
+        }
+        Console.WriteLine("Invalid input! Enter a string!");
+        return "";
+    }
+    catch (FormatException ex)
+    {
+        Console.WriteLine("Invalid input! Enter a string!");
+        return "";
+    }
+}
+
+//Returns a -1 if input doesnt match
+int check_str_is_an_int(string input_str, string range_of_inputs, int low, int high)
+{
+    Console.Write(input_str);
+    string str = Console.ReadLine();
+    try
+    {
+        int temp = int.Parse(str);
+        if (temp < low || temp > high)
+        {
+            Console.WriteLine("Input not in range, enter a range between " + range_of_inputs);
+            return -1;
+        }
+        else
+        {
+            return temp;
+        }
+    }
+    catch (FormatException ex)
+    {
+        Console.WriteLine("Invalid input, enter a range between " + range_of_inputs);
+        return -1;
+    }
+}
 
 //question 5 (mingjie)
 void assign_boarding_gate()
 {
-    Console.WriteLine($"=============================================\r\nAssign a Boarding Gate to a Flight\r\n=============================================\r\n");
-    Console.Write("Enter Flight Number: ");
-    string flight_num = Console.ReadLine();
-    bool flag = false;
-    Flight flight = null;
-    foreach (var f in terminal.Flights)
+    Console.WriteLine("=============================================\nAssign a Boarding Gate to a Flight\n=============================================\n");
+    string flight_num = check_str_is_a_str("Enter Flight Number: \n");
+    if (flight_num == "") { return; }
+    Flight flight = terminal.Check_Flight_Given_Flight_num(flight_num);
+    if (flight != null)
     {
-        if (f.Key == flight_num)
-        {
-            Console.WriteLine(f.Value.ToString());
-            flag = true;
-            flight = f.Value;
-            break;
-        }   
-    }
-    if (flag == true)
-    {
+        string boardingGate = "";
         bool condition = true;
-        while (condition == true)
+        while (condition)
         {
-            Console.Write("Enter Boarding Gate: ");
-            string boardingGate = Console.ReadLine();
-           /* BoardingGate B34 = new BoardingGate("B34", true, true, true, flight);
-            BoardingGates.Add("B34", B34);*/
-            foreach (var b in terminal.BoardingGates)
-            {
-                if (b.Key == boardingGate)
-                {
-                    if (b.Value.Flight == null)
-                    {
-
-                        b.Value.Flight = flight;
-                        Console.WriteLine($"Flight Number: {flight.FlightNumber}\r\nOrigin: {flight.Origin}\r\nDestination: {flight.Destination}\r\nExpected Time: {flight.ExpectedTime}\r\nSpecial Request Code: {get_special_request(flight)}\r\nBoarding Gate Name: {b.Value.GateName}\r\nSupports DDJB: {b.Value.SupportsDDJB}\r\nSupports CFFT: {b.Value.SupportsCFFT}\r\nSupports LWTT: {b.Value.SupportsLWTT}\r\n");
-                        condition = false;
-                    }
-                    else
-                    {
-                        Console.WriteLine("The Boarding Gate is already assigned.");
-                    }
-                    break;
-                }
-                
-            } 
+            boardingGate = check_str_is_a_str("Enter Boarding Gate: \n");
+            condition = terminal.Check_Boarding_Gate_Assigned(boardingGate, flight);
         }
-        while (condition == false)
+        condition = true;
+        while (condition)
         {
-            
-            Console.Write("Would you like to update the status of the Flight? (Y/N): ");
-            string choice = Console.ReadLine();
+            string choice = check_str_is_a_str("Would you like to update the status of the Flight? (Y/N): \n");
             if (choice == "Y")
             {
-                Console.WriteLine("1. Delayed\r\n2. Boarding\r\n3. On Time\r\nPlease select the new status of the flight:\r\n");
-                int option = Convert.ToInt32(Console.ReadLine());
-                string status;
-                if (option == 1)
+                int status = -1;
+                while (status == -1)
                 {
-                    status = "Delayed";
+                    status = check_str_is_an_int("1. Delayed\n2. Boarding\n3. On Time\nPlease select the new status of the flight:\n", "(1-3)", 1, 3);
                 }
-                else if (option == 2)
-                {
-                    status = "Boarding";
-                }
-                else
-                {
-                    status = "On Time";
-                }
-                flight.Status = status;
-                Console.WriteLine("Boarding Gate successfully assigned!");
-                condition = true;
+                flight.UpdateStatus(status);
+                condition = false;
             }
             else if (choice == "N")
             {
-                condition = true;
+                condition = false;
             }
             else
             {
                 Console.WriteLine("Please type only (Y) or (N)");
             }
         }
+        Console.WriteLine("Flight " + flight.FlightNumber + " has been assigned to Boarding Gate " + boardingGate + "!");
+    }
+    else
+    {
+        Console.WriteLine("Flight is not found in terminal");
     }
 
 }
@@ -214,63 +225,50 @@ void create_new_flight()
     string choice = null;
     while (choice != "N")
     {
-        Console.Write("Enter Flight Number: ");
-        string flightno = Console.ReadLine();
-        Console.Write("Enter Origin: ");
-        string origin = Console.ReadLine();
-        Console.Write("Enter Destination: ");
-        string destination = Console.ReadLine();
-        Console.Write("Enter expected Departure/Arrival time (dd/mm/yyyy hh:mm): ");
-        string timeString = Console.ReadLine();
+        string flightno = "", origin = "", destination = "", timeString = "";
+        while (flightno == "") { flightno = check_str_is_a_str("Enter Flight Number: "); }
+        while (origin == "") { origin = check_str_is_a_str("Enter Origin: "); }
+        while (destination == "") { destination = check_str_is_a_str("Enter Destination: "); }
+        while (timeString == "") { timeString = check_str_is_a_str("Enter expected Departure/Arrival time (dd/mm/yyyy hh:mm): "); }
         DateTime time = convert_to_dateTime(timeString);
-        Console.Write("Do you want to enter any additional information? (Y/N): ");
-        string option = Console.ReadLine();
+        string option = "";
+        while (option == "")
+        {
+            option = check_str_is_a_str("Do you want to enter any additional information? (Y/N): ");
+            if (option.ToUpper() == "Y" || option.ToUpper() == "N") { break; }
+            else { option = ""; }
+        }
 
         string special_req = null;
         if (option == "Y")
         {
-            Console.Write("What is the special request code: ");
-            special_req = Console.ReadLine();
-            if (special_req == "DDJB")
+            while (special_req != "DDJB" && special_req != "LWTT" && special_req != "CFFT")
             {
-                DDJBFlight D_new = new DDJBFlight(flightno, origin, destination, time, "On time", 300.0);
-                terminal.Flights.Add(flightno, D_new);
-                
+                special_req = check_str_is_a_str("What is the special request code: ").ToUpper();
             }
-            else if (special_req == "LWTT")
-            {
-                LWTTFlight L_new = new LWTTFlight(flightno, origin, destination, time, "On time", 500.0);
-                terminal.Flights.Add(flightno, L_new);
-                
-            }
-            else if (special_req == "CFFT")
-            {
-                CFFTFlight C_new = new CFFTFlight(flightno, origin, destination, time, "On time", 150.0);
-                terminal.Flights.Add(flightno, C_new);
-                
-            }
+            create_flights(flightno, origin, destination, time, "", special_req);
         }
-        else 
+        else
         {
-            NORMFlight N_new = new NORMFlight(flightno, origin, destination, time, "On time");
-            terminal.Flights.Add(flightno, N_new);
-          
+            create_flights(flightno, origin, destination, time, "", "");
         }
-        
-        using(StreamWriter sw = new StreamWriter("flights.csv",true))
+
+        using (StreamWriter sw = new StreamWriter("flights.csv", true))
         {
-            
             /*string flights = flightno + "," + origin + "," + destination + time.ToString("HH:mm tt") + "," + special_req;
             Console.WriteLine(flights);*/
-            sw.WriteLine(flightno+","+origin+","+destination+","+time.ToString("HH:mm tt")+","+special_req);
+            sw.WriteLine(flightno + "," + origin + "," + destination + "," + time.ToString("HH:mm tt") + "," + special_req);
             sw.Close();
         }
-        Console.WriteLine($"The flight {flightno} have been successfully added!");
+        Console.WriteLine($"Flight {flightno} have been added!");
 
-        Console.Write("Do you want to add another Flight? (Y/N) : ");
-        choice = Console.ReadLine().ToUpper();
+        choice = "";    //To Reset the choice
+        while (choice != "Y" && choice != "N")
+        {
+            choice = check_str_is_a_str("Do you want to add another Flight? (Y/N) : ").ToUpper();
+        }
     }
-    
+
 }
 //question 9 (mingjie)
 void display_scheduled_flights()

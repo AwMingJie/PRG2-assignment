@@ -76,5 +76,25 @@ namespace S10266864B_PRG2Assignment
 			
 			return $"{flightNumber,-15} {origin,-20} {destination,-15} {expectedTime,-25}";
 		}
-	}
+        //TODO 
+        public void UpdateStatus(int num)
+        {
+            if (num == 1)
+            {
+                status = "Delayed";
+            }
+            else if (num == 2)
+            {
+                status = "Boarding";
+            }
+            else if (num == 3)
+            {
+                status = "On Time";
+            }
+            else
+            {
+                Console.WriteLine("Status invalid");
+            }
+        }
+    }
 }

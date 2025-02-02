@@ -22,20 +22,6 @@ namespace S10266864B_PRG2Assignment
             get { return terminalName; }
             set { terminalName = value; }
         }
-
-        /*private Dictionary<string, Airline> airlines;
-
-        public Dictionary<string, Airline> Airlines = new Dictionary<string, Airline>();
-        
-        private Dictionary<string, Flight> flights;
-
-        public Dictionary<string, Flight> Flights = new Dictionary<string, Flight>();
-         
-        private Dictionary<string, BoardingGate> boardingGates;
-
-        public Dictionary<string, BoardingGate> BoardingGates = new Dictionary<string, BoardingGate>();*/
-
-        //Comment out the bottom if advanced A not working
         private Dictionary<string, Airline> airlines;
 
         public Dictionary<string, Airline> Airlines
@@ -65,7 +51,7 @@ namespace S10266864B_PRG2Assignment
 
         public Dictionary<string, double> GateFees = new Dictionary<string, double>();
 
-        public Terminal() { } 
+        public Terminal() { }
         public Terminal(string terminalName)
         {
             TerminalName = terminalName;
@@ -95,14 +81,12 @@ namespace S10266864B_PRG2Assignment
             if (boardingGate != null)
             {
                 string name = boardingGate.GateName;
-                // Change BoardingGates to boardingGates
                 if (boardingGates.ContainsKey(name))
                 {
                     return false;
                 }
                 else
                 {
-                    // Change BoardingGates to boardingGates
                     boardingGates.Add(name, boardingGate);
                     return true;
                 }
@@ -114,15 +98,15 @@ namespace S10266864B_PRG2Assignment
             string flightNum = flight.FlightNumber;
             string[] array = flightNum.Split(' ');
             string airlineCode = array[0];
-            foreach(var air in airlines) 
+            foreach (var air in airlines)
             {
-                if(air.Value.Code == airlineCode)
+                if (air.Value.Code == airlineCode)
                 {
                     return air.Value;
                 }
             }
             //Airline airline = airlines[airlineCode];
-            return null;          
+            return null;
         }
         public void PrintAirlineFees()
         {
@@ -138,6 +122,52 @@ namespace S10266864B_PRG2Assignment
             return s;
         }
 
+        //TODO Check Boarding Gate Assigned
+        public bool Check_Boarding_Gate_Assigned(string boarding_gate_input, Flight flight)
+        {
+            foreach (var bg in BoardingGates)
+            {
+                if (bg.Key == boarding_gate_input)
+                {
+                    if (bg.Value.Flight == null)
+                    {
+                        bg.Value.Flight = flight;
+                        Console.WriteLine("Flight Number: " + flight.FlightNumber);
+                        Console.WriteLine("Origin: " + flight.Origin);
+                        Console.WriteLine("Destination: " + flight.Destination);
+                        Console.WriteLine("Expected Time: " + flight.ExpectedTime);
+                        //TODO special request code??
+                        Console.WriteLine("Boarding Gate Name: " + bg.Value.GateName);
+                        Console.WriteLine("Supports DDJB: " + bg.Value.SupportsDDJB);
+                        Console.WriteLine("Supports CFFT: " + bg.Value.SupportsCFFT);
+                        Console.WriteLine("Supports LWTT: " + bg.Value.SupportsLWTT);
+                        return false;
+                    }
+                    else
+                    {
+                        Console.WriteLine("The Boarding Gate is already assigned.");
+                        return true;
+                    }
+                }
+            }
+            Console.WriteLine("Boarding Gate not found, Please type a valid boarding gate");
+            return true;
+        }
+
+
+        //TODO Find Flight based on flight number
+        public Flight Check_Flight_Given_Flight_num(string flight_num)
+        {
+            foreach (var f in flights)
+            {
+                if (f.Key == flight_num)
+                {
+                    return f.Value;
+                }
+            }
+            return null;
+        }
+
 
         public void AdvancedA()
         {
@@ -146,7 +176,7 @@ namespace S10266864B_PRG2Assignment
             Dictionary<string, BoardingGate> unassigned_boarding_gate = new Dictionary<string, BoardingGate>();
             foreach (var bg in boardingGates)
             {
-                if(bg.Value.Flight == null)
+                if (bg.Value.Flight == null)
                 {
                     unassigned_boarding_gate.Add(bg.Key, bg.Value);
                 }
@@ -171,33 +201,15 @@ namespace S10266864B_PRG2Assignment
             Console.WriteLine("Total number of flights that do not have any Boarding Gate assigned: " + flights_queue.Count);
             Console.WriteLine("Total number of Boarding Gates that do not have a Flight Number assigned yet: " + unassigned_boarding_gate.Count);
 
-            /*while(flights_queue.Count > 0)
-            {
-                Flight temp_flight = flights_queue.Dequeue();
-                if (temp_flight.GetType() == typeof(NORMFlight))
-                {
-                    BoardingGate temp_bg;
-                    foreach (var bg in unassigned_boarding_gate)
-                    {
-                        if (bg.Value.IsNormal() == true)
-                        {
-                            bg.Value.Flight = temp_flight;
-
-                            break;
-                        }
-                    }
-
-                }
-            }*/
             int i = 0;
             foreach (var flight in flights_queue)
             {
-                
+
                 if (flight.GetType() == typeof(NORMFlight))
                 {
-                    foreach(var bg in unassigned_boarding_gate)
+                    foreach (var bg in unassigned_boarding_gate)
                     {
-                        if(bg.Value.IsNormal() == true)
+                        if (bg.Value.IsNormal() == true)
                         {
                             bg.Value.Flight = flight;
                             boardingGates[bg.Key].Flight = flight;
@@ -208,11 +220,11 @@ namespace S10266864B_PRG2Assignment
                         }
                     }
                 }
-                else if(flight.GetType() == typeof(CFFTFlight))
+                else if (flight.GetType() == typeof(CFFTFlight))
                 {
-                    foreach(var bg in unassigned_boarding_gate)
+                    foreach (var bg in unassigned_boarding_gate)
                     {
-                        if(bg.Value.SupportsCFFT == true)
+                        if (bg.Value.SupportsCFFT == true)
                         {
                             bg.Value.Flight = flight;
                             boardingGates[bg.Key].Flight = flight;
