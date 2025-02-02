@@ -495,6 +495,8 @@ void display_flight_details(Flight f)
 void modify_flight_details()
 
 {
+    bool modifyRequestCode = false;
+    string new_special_request = "";
     display_airlines();
     Console.Write("Enter Airline Code: ");
     string? user_input = Console.ReadLine();
@@ -566,11 +568,11 @@ void modify_flight_details()
                     else if (modify_choice == "3")
                     {
                         Console.Write("Enter new special request code('None' for no special requests): ");
-                        string new_special_request = Console.ReadLine();
+                        new_special_request = Console.ReadLine();
                         List<string> special_request_list = new List<string> { "DDJB", "LWTT", "CFFT", "None" };
                         if (special_request_list.Contains(new_special_request))
                         {
-                            Console.WriteLine("Special request code modified.");
+                            modifyRequestCode = true;
                         }
                         else
                         {
@@ -618,6 +620,23 @@ void modify_flight_details()
                 }
             }
         }
+
+        if (modifyRequestCode)
+        {
+            string flightnum = flight_to_modify.FlightNumber, origin = flight_to_modify.Origin, destination = flight_to_modify.Destination, status = flight_to_modify.Status;
+            DateTime time = flight_to_modify.ExpectedTime;
+            if (terminal.Remove_Flight_From_Terminal(flight_to_modify.FlightNumber))
+            {
+                create_flights(flightnum, origin, destination, time, status, new_special_request);
+                Console.WriteLine("Special request code modified.");
+            }
+            else
+            {
+                Console.WriteLine("Flight not found in the Dictionary");
+            }
+        }
+
+
     }
 }
 

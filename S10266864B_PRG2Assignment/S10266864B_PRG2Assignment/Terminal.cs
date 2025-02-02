@@ -168,6 +168,19 @@ namespace S10266864B_PRG2Assignment
             return null;
         }
 
+        public bool Remove_Flight_From_Terminal(string flightnum)
+        {
+            foreach (var f in flights)
+            {
+                if (f.Key == flightnum)
+                {
+                    flights.Remove(flightnum);
+                    return true;
+                }
+            }
+
+            return false;
+        }
 
         public void AdvancedA()
         {
